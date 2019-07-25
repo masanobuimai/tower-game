@@ -6,8 +6,8 @@ import de.gurkenlabs.litiengine.abilities.effects.Effect;
 import de.gurkenlabs.litiengine.abilities.effects.EffectTarget;
 import de.gurkenlabs.litiengine.annotation.AbilityInfo;
 import de.gurkenlabs.litiengine.entities.Creature;
-import tower.engine.entity.Mob;
-import tower.engine.entity.Tower;
+import tower.engine.entity.MobEntity;
+import tower.engine.entity.TowerEntity;
 
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -49,14 +49,14 @@ public class Charge extends Ability {
             .findCombatEntities(myEntity.getCollisionBox(),  // 接触してる相手チームで
                                 combatEntity -> myEntity.getTeam() != combatEntity.getTeam()).stream()
             .map(e -> (Creature) e)
-            .filter(e -> e instanceof Tower // タワーか
+            .filter(e -> e instanceof TowerEntity // タワーか
                          // 戦闘中ではない相手（自分の相手は対象にする）
-                         || (e instanceof Mob && !((Mob) e).isEngage(myEntity)))
+                         || (e instanceof MobEntity && !((MobEntity) e).isEngage(myEntity)))
             .findFirst();
         myEntity.setVelocity(baseVelocity);
         enemy.ifPresent(e -> {
           log.info(() -> myEntity + " next=> " + e);
-          if (e instanceof Tower) {
+          if (e instanceof TowerEntity) {
             // タワーだった場合，歩みをちょっと遅くして通り抜けさせる
             myEntity.setVelocity(baseVelocity * 0.7f);
           } else {

@@ -22,15 +22,15 @@ import java.util.logging.Logger;
 @MovementInfo(velocity = 60)
 @CollisionInfo(collisionBoxWidth = 16, collisionBoxHeight = 18, collision = false)
 @CombatInfo(hitpoints = 100)
-public abstract class Mob extends Creature implements IUpdateable {
-  private static final Logger log = Logger.getLogger(Mob.class.getName());
+public abstract class MobEntity extends Creature implements IUpdateable {
+  private static final Logger log = Logger.getLogger(MobEntity.class.getName());
 
   public static final int LEFT_SIDE = 0;
   public static final int RIGHT_SIDE = 1;
 
   private Charge charge;
 
-  public Mob(String name, int team) {
+  public MobEntity(String name, int team) {
     super(name);
     this.charge = new Charge(this);
 
@@ -41,7 +41,7 @@ public abstract class Mob extends Creature implements IUpdateable {
       IAnimationController controller = e.getEntity().getAnimationController();
       controller.add(new OverlayPixelsImageEffect(50, Color.WHITE));
       Game.loop().perform(50, () -> controller.add(new OverlayPixelsImageEffect(50, Color.RED)));
-      if (e.getAbility().getExecutor() instanceof SpecialMob) {
+      if (e.getAbility().getExecutor() instanceof SpecialEntity) {
         Emitter emitter = new FireEmitter((int) getX(), (int) getY());
         emitter.setHeight(getHeight());
         emitter.setTimeToLive(1500);

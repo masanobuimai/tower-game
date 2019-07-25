@@ -4,9 +4,9 @@ import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.Camera;
 import de.gurkenlabs.litiengine.input.Input;
 import de.gurkenlabs.litiengine.resources.Resources;
-import tower.engine.entity.Enemy;
-import tower.engine.entity.Player;
-import tower.engine.entity.Tower;
+import tower.engine.entity.EnemyEntity;
+import tower.engine.entity.SoldierEntity;
+import tower.engine.entity.TowerEntity;
 import tower.engine.ui.MainScreen;
 import tower.engine.ui.TitleScreen;
 
@@ -36,9 +36,9 @@ public class GameManager {
 
   private static int count;
 
-  private static Tower tower;
+  private static TowerEntity tower;
 
-  public static Tower tower() {
+  public static TowerEntity tower() {
     return tower;
   }
 
@@ -93,7 +93,7 @@ public class GameManager {
 
     state = GameState.INGAME;
     count = 0;
-    tower = new Tower();
+    tower = new TowerEntity();
     Game.window().getRenderComponent().fadeOut(500);
     Game.loop().perform(600, () -> {
       Game.window().getRenderComponent().fadeIn(500);
@@ -104,8 +104,8 @@ public class GameManager {
 
   public static void update() {
     if (timing() && count < MAX_COUNT) {
-      Utils.spawn("spawn", new Enemy());
-      Utils.spawn("respawn", new Player());
+      Utils.spawn("spawn", new EnemyEntity());
+      Utils.spawn("respawn", new SoldierEntity());
       count++;
     }
     if (count != 0 && Game.world().environment().getCombatEntities().size() == 1) {

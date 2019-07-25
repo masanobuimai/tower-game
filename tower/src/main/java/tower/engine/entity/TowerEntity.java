@@ -17,11 +17,11 @@ import java.awt.*;
 @EntityInfo(width = 52, height = 41)
 @CollisionInfo(collisionBoxWidth = 16, collisionBoxHeight = 18, collision = false)
 @CombatInfo(hitpoints = 1000)
-public class Tower extends Creature {
+public class TowerEntity extends Creature {
 
-  public Tower() {
+  public TowerEntity() {
     super("bunker");
-    setTeam(Mob.LEFT_SIDE);
+    setTeam(MobEntity.LEFT_SIDE);
     setVelocity(0);
     addHitListener(e -> {
       IAnimationController controller = e.getEntity().getAnimationController();
@@ -49,6 +49,6 @@ public class Tower extends Creature {
   }
 
   public void consumeShoot() {
-    Utils.spawn("tower", new SpecialMob());
+    Utils.spawn("tower", new SpecialEntity());
   }
 }

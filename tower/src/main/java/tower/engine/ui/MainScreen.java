@@ -6,7 +6,7 @@ import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.screens.GameScreen;
 import tower.engine.GameManager;
 import tower.engine.Utils;
-import tower.engine.entity.Mob;
+import tower.engine.entity.MobEntity;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -20,8 +20,8 @@ public class MainScreen extends GameScreen implements IUpdateable {
     hud = new Hud(0, 0);
     getComponents().add(hud);
     Game.graphics().onEntityRendered(e -> {
-      if (e.getRenderedObject() instanceof Mob) {
-        renderLifeBar((Mob) e.getRenderedObject(), e.getGraphics());
+      if (e.getRenderedObject() instanceof MobEntity) {
+        renderLifeBar((MobEntity) e.getRenderedObject(), e.getGraphics());
       }
     });
   }
@@ -43,7 +43,7 @@ public class MainScreen extends GameScreen implements IUpdateable {
     }
   }
 
-  public void renderLifeBar(Mob e, Graphics2D g) {
+  public void renderLifeBar(MobEntity e, Graphics2D g) {
     if (!e.isDead()) {
       double hpRatio = e.getHitPoints().getCurrentValue().doubleValue() / e.getHitPoints().getMaxValue().doubleValue();
       double healthBarMaxWidth = e.getWidth();
