@@ -19,7 +19,6 @@ import java.awt.*;
 @CollisionInfo(collisionBoxWidth = 16, collisionBoxHeight = 18, collision = false)
 @CombatInfo(hitpoints = 1000)
 public class TowerEntity extends Creature {
-  private static final int MAX_SOLDIER_COUNT = 30;
   private int countMax;
   private int count;
   private Tower tower;
@@ -34,7 +33,7 @@ public class TowerEntity extends Creature {
       hit(999);
       this.countMax = 0;
     } else {
-      this.countMax = Math.min(MAX_SOLDIER_COUNT, tower.getSoldierList().size());
+      this.countMax = Math.min(Tower.MAX_SOLDIER_COUNT, tower.getSoldierList().size());
     }
     addHitListener(e -> {
       IAnimationController controller = e.getEntity().getAnimationController();

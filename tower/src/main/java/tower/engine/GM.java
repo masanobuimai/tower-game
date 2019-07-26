@@ -30,7 +30,7 @@ public class GM {
 
   private static GameState state;
 
-  public static final int MAX_ENEMY_COUNT = 30;
+  public static final int MAX_ENEMY_COUNT = 100;
 
   private static boolean timing() {
     return Game.loop().getTicks() % 30 == 0;
