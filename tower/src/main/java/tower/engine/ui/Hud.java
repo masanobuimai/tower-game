@@ -5,7 +5,7 @@ import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.GuiComponent;
 import de.gurkenlabs.litiengine.resources.Resources;
-import tower.engine.GameManager;
+import tower.engine.GM;
 import tower.engine.Utils;
 
 import java.awt.*;
@@ -25,6 +25,7 @@ public class Hud extends GuiComponent {
   public void render(Graphics2D g) {
     renderHealthBar(g);
     renderInventory(g);
+    renderCount(g);
   }
 
   private void renderHealthBar(Graphics2D g) {
@@ -34,15 +35,15 @@ public class Hud extends GuiComponent {
     double healthBarHeight = screenHeight * 0.05;
     double healthBarX = (screenWidth - healthBarMaxWidth) / 2.0D;
     double healthBarY = screenHeight * 0.85;
-    int hp = GameManager.tower().getHitPoints().getCurrentValue();
-    int maxHp = GameManager.tower().getHitPoints().getMaxValue();
+    int hp = GM.tower().getHitPoints().getCurrentValue();
+    int maxHp = GM.tower().getHitPoints().getMaxValue();
     double currentHealthRatio = hp * 1.0 / maxHp;
     String healthRatioText = String.valueOf(hp);
     Rectangle2D healthShadowRect = new Rectangle2D.Double(healthBarX - 2.0D, healthBarY - 2.0D,
                                                           healthBarMaxWidth + 4.0D, healthBarHeight + 4.0D);
     Rectangle2D healthRect = new Rectangle2D.Double(healthBarX, healthBarY,
                                                     currentHealthRatio * healthBarMaxWidth, healthBarHeight);
-    g.setFont(Utils.fontBold());
+    g.setFont(Utils.fontLarge());
     FontMetrics fm = g.getFontMetrics();
     double healthTextX = healthBarX + healthBarMaxWidth / 2.0D - (double) fm.stringWidth(healthRatioText) / 2.0D;
     double healthTextY = healthBarY + (double) fm.getAscent() + (healthBarHeight - (double) (fm.getAscent() + fm.getDescent())) / 2.0D;
@@ -75,5 +76,22 @@ public class Hud extends GuiComponent {
                                             inventoryY + inventoryHeight * 0.5 - image.getHeight() / 2);
       ImageRenderer.render(g, image, location);
     }
+  }
+
+  private void renderCount(Graphics2D g) {
+    double screenWidth = Game.screens().current().getWidth();
+    double screenHeight = Game.screens().current().getHeight();
+    g.setFont(Utils.fontLarge());
+    FontMetrics fm = g.getFontMetrics();
+    g.setColor(textColor);
+
+    double countY = screenHeight * 0.85;
+    String countText = GM.soldierCount();
+    double countX = screenWidth * 0.05 - (double) fm.stringWidth(countText) / 2.0D;
+    TextRenderer.renderWithOutline(g, countText, countX, countY, Color.BLACK);
+
+    String enemyCountText = GM.enemyCount();
+    double enemyCountX = screenWidth * 0.95 - (double) fm.stringWidth(enemyCountText) / 2.0D;
+    TextRenderer.renderWithOutline(g, enemyCountText, enemyCountX, countY, Color.BLACK);
   }
 }

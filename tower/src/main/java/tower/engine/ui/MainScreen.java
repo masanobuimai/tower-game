@@ -4,7 +4,7 @@ import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.IUpdateable;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.screens.GameScreen;
-import tower.engine.GameManager;
+import tower.engine.GM;
 import tower.engine.Utils;
 import tower.engine.entity.MobEntity;
 
@@ -28,17 +28,17 @@ public class MainScreen extends GameScreen implements IUpdateable {
 
   @Override
   public void update() {
-    GameManager.update();
+    GM.update();
   }
 
   @Override
   public void render(Graphics2D g) {
     super.render(g);
-    if (GameManager.gameover()) {
+    if (GM.gameover()) {
       // タワーだけになったらゲームオーバー
-      String title = "game over:" + (GameManager.tower().isDead() ? "loose" : "win!!");
+      String title = "game over:" + (GM.tower().isDead() ? "loose" : "win!!");
       g.setColor(Color.WHITE);
-      g.setFont(Utils.fontBold());
+      g.setFont(Utils.fontLarge());
       TextRenderer.renderWithOutline(g, title, Game.world().environment().getCenter(), Color.BLACK);
     }
   }

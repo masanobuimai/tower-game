@@ -19,8 +19,9 @@ import java.util.function.Function;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class GameManager {
-  private static final Logger log = Logger.getLogger(GameManager.class.getName());
+// ゲームマスター
+public class GM {
+  private static final Logger log = Logger.getLogger(GM.class.getName());
 
   public enum GameState {
     READY, INGAME, GAMEOVER
@@ -28,13 +29,13 @@ public class GameManager {
 
   private static GameState state;
 
-  private static final int MAX_COUNT = 30;
+  public static final int MAX_ENEMY_COUNT = 30;
 
   private static boolean timing() {
     return Game.loop().getTicks() % 30 == 0;
   }
 
-  private static int count;
+  private static int enemyCount;
 
   private static Tower tower;
   private static TowerEntity towerEntity;
@@ -45,13 +46,13 @@ public class GameManager {
 
   public static void start(Tower _tower) {
     state = GameState.READY;
-    try (InputStream resource = GameManager.class.getResourceAsStream("/logging.properties")) {
+    try (InputStream resource = GM.class.getResourceAsStream("/logging.properties")) {
       if (resource != null) {
         LogManager.getLogManager().readConfiguration(resource);
       }
     } catch (IOException ignore) {
     }
-    URL resource = GameManager.class.getClassLoader().getResource("game.litidata");
+    URL resource = GM.class.getClassLoader().getResource("game.litidata");
     Resources.load(resource);
 
     Game.init();
@@ -89,14 +90,13 @@ public class GameManager {
                                    ke.apply(() -> towerEntity.consumeShoot()));
   }
 
-
   private static void startGame() {
     log.info(() -> "state:" + state);
     if (state == GameState.INGAME) return;
 
     // TODO ゲームオーバー後の再開がヘンなので何とかしたい
     state = GameState.INGAME;
-    count = 0;
+    enemyCount = 0;
     towerEntity = new TowerEntity(tower);
     Game.window().getRenderComponent().fadeOut(500);
     Game.loop().perform(600, () -> {
@@ -107,14 +107,22 @@ public class GameManager {
   }
 
   public static void update() {
-    if (timing() && count < MAX_COUNT) {
+    if (timing() && enemyCount < MAX_ENEMY_COUNT) {
       Utils.spawn("spawn", new EnemyEntity());
 //      Utils.spawn("respawn", new SoldierEntity());
-      count++;
+      enemyCount++;
     }
     if (towerEntity.isDead()
-        || count != 0 && Game.world().environment().getCombatEntities().size() == 1) {
+        || enemyCount != 0 && Game.world().environment().getCombatEntities().size() == 1) {
       state = GameState.GAMEOVER;
     }
+  }
+
+  public static String soldierCount() {
+    return String.valueOf("0/0");
+  }
+
+  public static String enemyCount() {
+    return String.valueOf(enemyCount + "/" + MAX_ENEMY_COUNT);
   }
 }

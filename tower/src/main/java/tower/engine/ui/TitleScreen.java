@@ -21,7 +21,7 @@ public class TitleScreen extends GameScreen implements IUpdateable {
   @Override
   public void render(Graphics2D g) {
     super.render(g);
-    g.setFont(Utils.fontBold());
+    g.setFont(Utils.fontLarge());
     TextRenderer.renderWithOutline(g, "push space key!!", Game.world().environment().getCenter(), Color.BLACK);
   }
 

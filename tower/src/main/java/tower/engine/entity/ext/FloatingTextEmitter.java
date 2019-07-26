@@ -30,7 +30,7 @@ public class FloatingTextEmitter extends Emitter {
     TextParticle particle = new TextParticle(text, color, getParticleMaxTTL());
     particle.setY(-16f);
     particle.setDeltaIncY(-0.05f);
-    particle.setFont(Utils.fontPlain());
+    particle.setFont(Utils.fontNormal());
     return particle;
   }
 }

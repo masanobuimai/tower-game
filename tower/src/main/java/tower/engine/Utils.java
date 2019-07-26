@@ -25,11 +25,11 @@ public class Utils {
         .forEach(c -> entity.die());
   }
 
-  public static Font fontPlain() {
+  public static Font fontNormal() {
     return getFont("PICO-8.ttf", 8.0f);
   }
 
-  public static Font fontBold() {
+  public static Font fontLarge() {
     return getFont("PICO-8.ttf", 16.0f);
   }
 

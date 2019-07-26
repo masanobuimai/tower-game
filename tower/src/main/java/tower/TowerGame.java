@@ -1,13 +1,13 @@
 package tower;
 
-import tower.engine.GameManager;
+import tower.engine.GM;
 
 public class TowerGame {
   public static void start() {
-    GameManager.start(null);
+    GM.start(null);
   }
 
   public static void start(Tower tower) {
-    GameManager.start(tower);
+    GM.start(tower);
   }
 }
