@@ -110,9 +110,11 @@ public class GM {
     });
   }
 
+  private static boolean spawnTick = false;
+
   public static void update() {
     if (timing()) {
-      if (!towerEntity.isDead()) {
+      if (!towerEntity.isDead() && spawnTick) {
         Optional.ofNullable(towerEntity.getSoldierEntity())
                 .ifPresent(e -> Utils.spawn("respawn", e));
       }
@@ -120,6 +122,7 @@ public class GM {
         Utils.spawn("spawn", new EnemyEntity());
         enemyCount++;
       }
+      spawnTick = !spawnTick;
     }
     if (towerEntity.isDead()
         || enemyCount >= MAX_ENEMY_COUNT && Game.world().environment().getCombatEntities().size() == 1) {

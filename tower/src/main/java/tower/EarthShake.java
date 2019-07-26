@@ -18,7 +18,8 @@ public interface EarthShake {
       if (Math.random() < 0.15) {
         throw new TowerException("ゴメン，失敗した。");
       }
-      e.hit((new Random().nextInt(2) + 1) * 10);
+      // 30～100の範囲でダメージを決定する
+      e.hit((new Random().nextInt(7) + 1) * 10 + 30);
     }
   }
 }
