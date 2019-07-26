@@ -131,7 +131,7 @@ public class TowerEntity extends Creature {
   public void consumeRush() {
     if (canRush() && rushCount > 0) {
       rushCount--;
-      Utils.spawn("tower", new StrikerEntity());
+      Utils.spawn("tower", new StrikerEntity((RushAttack) tower));
     }
   }
 }

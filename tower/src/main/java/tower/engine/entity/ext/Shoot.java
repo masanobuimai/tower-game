@@ -5,7 +5,7 @@ import de.gurkenlabs.litiengine.abilities.Ability;
 import de.gurkenlabs.litiengine.abilities.effects.Effect;
 import de.gurkenlabs.litiengine.abilities.effects.EffectTarget;
 import de.gurkenlabs.litiengine.annotation.AbilityInfo;
-import de.gurkenlabs.litiengine.entities.Creature;
+import tower.engine.entity.StrikerEntity;
 
 import java.util.logging.Logger;
 
@@ -13,10 +13,12 @@ import java.util.logging.Logger;
 public class Shoot extends Ability {
   private static final Logger log = Logger.getLogger(Shoot.class.getName());
 
+  private StrikerEntity striker;
   private static int damage = 100;
 
-  public Shoot(Creature executor) {
+  public Shoot(StrikerEntity executor) {
     super(executor);
+    striker = executor;
     this.addEffect(new ShootEffect(this));
   }
 
@@ -28,11 +30,11 @@ public class Shoot extends Ability {
     @Override
     public void update() {
       super.update();
-      Creature myEntity = this.getAbility().getExecutor();
       Game.world().environment()
-          .findCombatEntities(myEntity.getCollisionBox(),
-                              combatEntity -> myEntity.getTeam() != combatEntity.getTeam()).stream()
-          .forEach(e -> e.hit(damage, getAbility()));
+          .findCombatEntities(striker.getCollisionBox(),
+                              combatEntity -> striker.getTeam() != combatEntity.getTeam()).stream()
+          .filter(e -> striker.checkTarget(e))
+          .forEach(e -> e.hit(striker.getDamage(), getAbility()));
     }
   }
 }

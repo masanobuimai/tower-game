@@ -40,4 +40,9 @@ public class MyTower extends Tower implements Recovery, EarthShake, RushAttack {
     } catch (TowerException ignore) {
     }
   }
+
+  @Override
+  public boolean attack(Enemy enemy) {
+    return enemy.getHpRatio() > 0.2;
+  }
 }
