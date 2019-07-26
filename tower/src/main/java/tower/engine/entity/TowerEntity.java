@@ -10,6 +10,7 @@ import de.gurkenlabs.litiengine.graphics.animation.IAnimationController;
 import de.gurkenlabs.litiengine.graphics.emitters.Emitter;
 import de.gurkenlabs.litiengine.graphics.emitters.FireEmitter;
 import de.gurkenlabs.litiengine.graphics.emitters.ShimmerEmitter;
+import tower.Recovery;
 import tower.Tower;
 import tower.engine.Utils;
 
@@ -19,22 +20,25 @@ import java.awt.*;
 @CollisionInfo(collisionBoxWidth = 16, collisionBoxHeight = 18, collision = false)
 @CombatInfo(hitpoints = 1000)
 public class TowerEntity extends Creature {
-  private int countMax;
-  private int count;
   private Tower tower;
+  private int soldierCount;
+  private int soldierCountMax;
+  private int recoveryCount;
 
   public TowerEntity(Tower tower) {
     super(tower != null ? tower.getName() : "");
     setTeam(MobEntity.LEFT_SIDE);
     setVelocity(0);
-    this.count = 0;
     this.tower = tower;
+    this.soldierCount = 0;
     if (tower == null) {
       hit(999);
-      this.countMax = 0;
+      this.soldierCountMax = 0;
     } else {
-      this.countMax = Math.min(Tower.MAX_SOLDIER_COUNT, tower.getSoldierList().size());
+      this.soldierCountMax = Math.min(Tower.MAX_SOLDIER_COUNT, tower.getSoldierList().size());
     }
+    recoveryCount = isRecoverable() ? 2 : 0;
+
     addHitListener(e -> {
       IAnimationController controller = e.getEntity().getAnimationController();
       controller.add(new OverlayPixelsImageEffect(50, Color.WHITE));
@@ -48,21 +52,33 @@ public class TowerEntity extends Creature {
   }
 
   public SoldierEntity getSoldierEntity() {
-    if (count < countMax) {
-      return new SoldierEntity(tower.getSoldierList().get(count++));
+    if (soldierCount < soldierCountMax) {
+      return new SoldierEntity(tower.getSoldierList().get(soldierCount++));
     } else {
       return null;
     }
   }
 
   public String soldierCount() {
-    return String.valueOf(count + "/" + countMax);
+    return String.valueOf(soldierCount + "/" + soldierCountMax);
   }
 
-  public void consumePill() {
-    ShimmerEmitter emitter = new ShimmerEmitter(this.getX(), this.getY());
-    emitter.setTimeToLive(2000);
-    Game.world().environment().add(emitter);
+  public boolean isRecoverable() {
+    return tower != null && tower instanceof Recovery;
+  }
+
+  public int getRecoveryCount() {
+    return recoveryCount;
+  }
+
+  public void consumeRecovery() {
+    if (isRecoverable() && recoveryCount > 0) {
+      recoveryCount--;
+      getHitPoints().setToMaxValue();
+      ShimmerEmitter emitter = new ShimmerEmitter(this.getX(), this.getY());
+      emitter.setTimeToLive(2000);
+      Game.world().environment().add(emitter);
+    }
   }
 
   public void consumeShake() {

@@ -84,7 +84,7 @@ public class GM {
     Function<Runnable, Consumer<KeyEvent>> ke = r ->
         e -> { if (state == GameState.INGAME && !tower().isDead()) r.run(); };
     Input.keyboard().onKeyReleased(KeyEvent.VK_F1,
-                                   ke.apply(() -> towerEntity.consumePill()));
+                                   ke.apply(() -> towerEntity.consumeRecovery()));
     Input.keyboard().onKeyReleased(KeyEvent.VK_F2,
                                    ke.apply(() -> towerEntity.consumeShake()));
     Input.keyboard().onKeyReleased(KeyEvent.VK_F3,
@@ -128,5 +128,20 @@ public class GM {
 
   public static String enemyCount() {
     return String.valueOf(enemyCount + "/" + MAX_ENEMY_COUNT);
+  }
+
+  public static Pair<Boolean, Integer> recoverable() {
+    return new Pair<>(towerEntity != null && towerEntity.isRecoverable(),
+                      towerEntity != null ? towerEntity.getRecoveryCount() : 0);
+  }
+
+  public static class Pair<T1, T2> {
+    public final T1 v1;
+    public final T2 v2;
+
+    public Pair(T1 v1, T2 v2) {
+      this.v1 = v1;
+      this.v2 = v2;
+    }
   }
 }

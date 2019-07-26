@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.function.Supplier;
 
 public class Hud extends GuiComponent {
   public static Color hudRedColor = new Color(188, 12, 12);
@@ -26,6 +27,25 @@ public class Hud extends GuiComponent {
     renderHealthBar(g);
     renderInventory(g);
     renderCount(g);
+  }
+
+  private static final Inventory[] INVENTORIES = new Inventory[]{
+      new Inventory("prop-painkiller",
+                    () -> GM.recoverable().v1, () -> GM.recoverable().v2),
+      new Inventory("prop-beer", () -> false, () -> 0),
+      new Inventory("prop-carrot", () -> false, () -> 0),
+      };
+
+  private static class Inventory {
+    String name;
+    Supplier<Boolean> available;
+    Supplier<Integer> count;
+
+    public Inventory(String name, Supplier<Boolean> available, Supplier<Integer> count) {
+      this.name = name;
+      this.available = available;
+      this.count = count;
+    }
   }
 
   private void renderHealthBar(Graphics2D g) {
@@ -65,16 +85,27 @@ public class Hud extends GuiComponent {
     double inventoryX = (screenWidth / 2.0) - (inventoryCellWidth * 1.5) - (inventoryMargin);
     double inventoryY = screenHeight * 0.05;
 
-    String[] icons = new String[]{"prop-painkiller", "prop-beer", "prop-carrot"};
-    for (int i = 0; i < icons.length; i++) {
+    for (int i = 0; i < INVENTORIES.length; i++) {
       Rectangle2D shadowRect = new Rectangle2D.Double(inventoryX + (inventoryCellWidth + inventoryMargin) * i,
                                                       inventoryY, inventoryCellWidth, inventoryHeight);
       g.setColor(shadowColor);
       g.fill(shadowRect);
-      BufferedImage image = Resources.spritesheets().get(icons[i]).getImage();
-      Point2D location = new Point2D.Double(inventoryX + (inventoryCellWidth + inventoryMargin) * i + inventoryCellWidth * 0.5 - image.getWidth() / 2,
-                                            inventoryY + inventoryHeight * 0.5 - image.getHeight() / 2);
-      ImageRenderer.render(g, image, location);
+
+      g.setFont(Utils.fontNormal());
+      FontMetrics fm = g.getFontMetrics();
+      g.setColor(textColor);
+      TextRenderer.renderWithOutline(g, "f" + (i + 1), shadowRect.getX(),
+                                     shadowRect.getY() + fm.getHeight(), Color.BLACK);
+
+      if (INVENTORIES[i].available.get() && INVENTORIES[i].count.get() > 0) {
+        BufferedImage image = Resources.spritesheets().get(INVENTORIES[i].name).getImage();
+        double x = inventoryX + (inventoryCellWidth + inventoryMargin) * i + inventoryCellWidth * 0.5 - image.getWidth() / 2;
+        double y = inventoryY + inventoryHeight * 0.5 - image.getHeight() / 2;
+        ImageRenderer.render(g, image, new Point2D.Double(x, y));
+
+        g.setColor(textColor);
+        TextRenderer.renderWithOutline(g, String.valueOf(INVENTORIES[i].count.get()), x, y * 2, Color.BLACK);
+      }
     }
   }
 
