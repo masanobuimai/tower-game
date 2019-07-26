@@ -10,6 +10,7 @@ import de.gurkenlabs.litiengine.graphics.animation.IAnimationController;
 import de.gurkenlabs.litiengine.graphics.emitters.Emitter;
 import de.gurkenlabs.litiengine.graphics.emitters.FireEmitter;
 import de.gurkenlabs.litiengine.graphics.emitters.ShimmerEmitter;
+import tower.Tower;
 import tower.engine.Utils;
 
 import java.awt.*;
@@ -18,11 +19,13 @@ import java.awt.*;
 @CollisionInfo(collisionBoxWidth = 16, collisionBoxHeight = 18, collision = false)
 @CombatInfo(hitpoints = 1000)
 public class TowerEntity extends Creature {
+  private Tower tower;
 
-  public TowerEntity() {
-    super("bunker");
+  public TowerEntity(Tower tower) {
+    super(tower != null ? tower.getName() : "");
     setTeam(MobEntity.LEFT_SIDE);
     setVelocity(0);
+    if (tower == null) hit(999);
     addHitListener(e -> {
       IAnimationController controller = e.getEntity().getAnimationController();
       controller.add(new OverlayPixelsImageEffect(50, Color.WHITE));

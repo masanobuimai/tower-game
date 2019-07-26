@@ -4,8 +4,8 @@ import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.Camera;
 import de.gurkenlabs.litiengine.input.Input;
 import de.gurkenlabs.litiengine.resources.Resources;
+import tower.Tower;
 import tower.engine.entity.EnemyEntity;
-import tower.engine.entity.SoldierEntity;
 import tower.engine.entity.TowerEntity;
 import tower.engine.ui.MainScreen;
 import tower.engine.ui.TitleScreen;
@@ -36,13 +36,15 @@ public class GameManager {
 
   private static int count;
 
-  private static TowerEntity tower;
+  private static Tower tower;
+  private static TowerEntity towerEntity;
 
   public static TowerEntity tower() {
-    return tower;
+    return towerEntity;
   }
 
-  public static void start() {
+  public static void start(Tower _tower) {
+    state = GameState.READY;
     try (InputStream resource = GameManager.class.getResourceAsStream("/logging.properties")) {
       if (resource != null) {
         LogManager.getLogManager().readConfiguration(resource);
@@ -53,7 +55,6 @@ public class GameManager {
     Resources.load(resource);
 
     Game.init();
-    state = GameState.READY;
     Game.graphics().setBaseRenderScale(1.0f);
 
     Game.screens().add(new MainScreen());
@@ -65,6 +66,8 @@ public class GameManager {
     Game.world().setCamera(cam);
 
     initInputDevice();
+
+    tower = _tower;
     Game.start();
   }
 
@@ -79,11 +82,11 @@ public class GameManager {
     Function<Runnable, Consumer<KeyEvent>> ke = r ->
         e -> { if (state == GameState.INGAME && !tower().isDead()) r.run(); };
     Input.keyboard().onKeyReleased(KeyEvent.VK_F1,
-                                   ke.apply(() -> tower.consumePill()));
+                                   ke.apply(() -> towerEntity.consumePill()));
     Input.keyboard().onKeyReleased(KeyEvent.VK_F2,
-                                   ke.apply(() -> tower.consumeShake()));
+                                   ke.apply(() -> towerEntity.consumeShake()));
     Input.keyboard().onKeyReleased(KeyEvent.VK_F3,
-                                   ke.apply(() -> tower.consumeShoot()));
+                                   ke.apply(() -> towerEntity.consumeShoot()));
   }
 
 
@@ -91,24 +94,26 @@ public class GameManager {
     log.info(() -> "state:" + state);
     if (state == GameState.INGAME) return;
 
+    // TODO ゲームオーバー後の再開がヘンなので何とかしたい
     state = GameState.INGAME;
     count = 0;
-    tower = new TowerEntity();
+    towerEntity = new TowerEntity(tower);
     Game.window().getRenderComponent().fadeOut(500);
     Game.loop().perform(600, () -> {
-      Game.window().getRenderComponent().fadeIn(500);
-      Utils.spawn("tower", tower);
       Game.screens().display("main");
+      Game.window().getRenderComponent().fadeIn(500);
+      Utils.spawn("tower", towerEntity);
     });
   }
 
   public static void update() {
     if (timing() && count < MAX_COUNT) {
       Utils.spawn("spawn", new EnemyEntity());
-      Utils.spawn("respawn", new SoldierEntity());
+//      Utils.spawn("respawn", new SoldierEntity());
       count++;
     }
-    if (count != 0 && Game.world().environment().getCombatEntities().size() == 1) {
+    if (towerEntity.isDead()
+        || count != 0 && Game.world().environment().getCombatEntities().size() == 1) {
       state = GameState.GAMEOVER;
     }
   }

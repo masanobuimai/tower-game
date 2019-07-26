@@ -1,9 +1,10 @@
 package tutorial.step1;
 
-import tower.engine.GameManager;
+import tower.TowerGame;
 
+// 超簡単バージョン
 public class Program01 {
   public static void main(String[] args) {
-    GameManager.start();
+    TowerGame.start();
   }
 }
