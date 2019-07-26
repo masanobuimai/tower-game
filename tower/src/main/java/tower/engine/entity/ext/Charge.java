@@ -16,8 +16,6 @@ import java.util.logging.Logger;
 public class Charge extends Ability {
   private static final Logger log = Logger.getLogger(Charge.class.getName());
 
-  private static int damage = 20;
-
   private float baseVelocity;
   private Optional<Creature> enemy;
 
@@ -42,7 +40,7 @@ public class Charge extends Ability {
     @Override
     public void update() {
       super.update();
-      Creature myEntity = this.getAbility().getExecutor();
+      MobEntity myEntity = (MobEntity) this.getAbility().getExecutor();
       if (!enemy.isPresent() || enemy.get().isDead()) {
         // 戦闘中でなければ，次の相手を探す
         enemy = Game.world().environment()
@@ -68,7 +66,7 @@ public class Charge extends Ability {
       if (enemy.isPresent()) {
         enemy.ifPresent(e -> {
           log.info(() -> myEntity + " in battle=> " + e);
-          if (e.isDead() || e.hit((int) (damage * Math.random()), getAbility())) {
+          if (e.isDead() || e.hit((int) (myEntity.damage() * Math.random()), getAbility())) {
             // 相手が死んだら，また歩み始める
             enemy = Optional.empty();
             myEntity.setVelocity(baseVelocity);

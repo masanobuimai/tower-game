@@ -5,12 +5,12 @@ import de.gurkenlabs.litiengine.IUpdateable;
 import de.gurkenlabs.litiengine.annotation.CollisionInfo;
 import de.gurkenlabs.litiengine.annotation.CombatInfo;
 import de.gurkenlabs.litiengine.annotation.EntityInfo;
-import de.gurkenlabs.litiengine.annotation.MovementInfo;
 import de.gurkenlabs.litiengine.entities.Creature;
 import de.gurkenlabs.litiengine.graphics.OverlayPixelsImageEffect;
 import de.gurkenlabs.litiengine.graphics.animation.IAnimationController;
 import de.gurkenlabs.litiengine.graphics.emitters.Emitter;
 import de.gurkenlabs.litiengine.graphics.emitters.FireEmitter;
+import tower.Soldier;
 import tower.engine.Utils;
 import tower.engine.entity.ext.Charge;
 import tower.engine.entity.ext.FloatingTextEmitter;
@@ -19,7 +19,6 @@ import java.awt.*;
 import java.util.logging.Logger;
 
 @EntityInfo(width = 18, height = 18)
-@MovementInfo(velocity = 60)
 @CollisionInfo(collisionBoxWidth = 16, collisionBoxHeight = 18, collision = false)
 @CombatInfo(hitpoints = 100)
 public abstract class MobEntity extends Creature implements IUpdateable {
@@ -29,10 +28,16 @@ public abstract class MobEntity extends Creature implements IUpdateable {
   public static final int RIGHT_SIDE = 1;
 
   private Charge charge;
+  protected int damage = Soldier.DEFAULT_POWER;
 
   public MobEntity(String name, int team) {
+    this(name, team, Soldier.DEFAULT_SPEED);
+  }
+
+  public MobEntity(String name, int team, int speed) {
     super(name);
-    this.charge = new Charge(this);
+    setVelocity(speed);
+    charge = new Charge(this);
 
     setTeam(team);
     addHitListener(e -> {
@@ -56,6 +61,10 @@ public abstract class MobEntity extends Creature implements IUpdateable {
 
   public boolean isEngage(Creature enemy) {
     return charge.isEngage(enemy);
+  }
+
+  public int damage() {
+    return damage;
   }
 
   @Override

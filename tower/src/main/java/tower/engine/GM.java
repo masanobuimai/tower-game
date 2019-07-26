@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.LogManager;
@@ -107,10 +108,13 @@ public class GM {
   }
 
   public static void update() {
-    if (timing() && enemyCount < MAX_ENEMY_COUNT) {
-      Utils.spawn("spawn", new EnemyEntity());
-//      Utils.spawn("respawn", new SoldierEntity());
-      enemyCount++;
+    if (timing()) {
+      Optional.ofNullable(towerEntity.getSoldierEntity())
+          .ifPresent(e -> Utils.spawn("respawn", e));
+      if (enemyCount < MAX_ENEMY_COUNT) {
+        Utils.spawn("spawn", new EnemyEntity());
+        enemyCount++;
+      }
     }
     if (towerEntity.isDead()
         || enemyCount != 0 && Game.world().environment().getCombatEntities().size() == 1) {
@@ -119,7 +123,7 @@ public class GM {
   }
 
   public static String soldierCount() {
-    return String.valueOf("0/0");
+    return towerEntity.soldierCount();
   }
 
   public static String enemyCount() {

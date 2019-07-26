@@ -19,13 +19,23 @@ import java.awt.*;
 @CollisionInfo(collisionBoxWidth = 16, collisionBoxHeight = 18, collision = false)
 @CombatInfo(hitpoints = 1000)
 public class TowerEntity extends Creature {
+  private static final int MAX_SOLDIER_COUNT = 30;
+  private int countMax;
+  private int count;
   private Tower tower;
 
   public TowerEntity(Tower tower) {
     super(tower != null ? tower.getName() : "");
     setTeam(MobEntity.LEFT_SIDE);
     setVelocity(0);
-    if (tower == null) hit(999);
+    this.count = 0;
+    this.tower = tower;
+    if (tower == null) {
+      hit(999);
+      this.countMax = 0;
+    } else {
+      this.countMax = Math.min(MAX_SOLDIER_COUNT, tower.getSoldierList().size());
+    }
     addHitListener(e -> {
       IAnimationController controller = e.getEntity().getAnimationController();
       controller.add(new OverlayPixelsImageEffect(50, Color.WHITE));
@@ -36,6 +46,18 @@ public class TowerEntity extends Creature {
       emitter.setHeight(e.getHeight());
       Game.world().environment().add(emitter);
     });
+  }
+
+  public SoldierEntity getSoldierEntity() {
+    if (count < countMax) {
+      return new SoldierEntity(tower.getSoldierList().get(count++));
+    } else {
+      return null;
+    }
+  }
+
+  public String soldierCount() {
+    return String.valueOf(count + "/" + countMax);
   }
 
   public void consumePill() {
