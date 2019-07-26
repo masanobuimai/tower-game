@@ -32,7 +32,8 @@ public class Hud extends GuiComponent {
   private static final Inventory[] INVENTORIES = new Inventory[]{
       new Inventory("prop-painkiller",
                     () -> GM.recoverable().v1, () -> GM.recoverable().v2),
-      new Inventory("prop-beer", () -> false, () -> 0),
+      new Inventory("prop-beer",
+                    () -> GM.shakable().v1, () -> GM.shakable().v2),
       new Inventory("prop-carrot", () -> false, () -> 0),
       };
 

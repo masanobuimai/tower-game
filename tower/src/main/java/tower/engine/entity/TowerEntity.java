@@ -11,20 +11,28 @@ import de.gurkenlabs.litiengine.graphics.emitters.Emitter;
 import de.gurkenlabs.litiengine.graphics.emitters.FireEmitter;
 import de.gurkenlabs.litiengine.graphics.emitters.ShimmerEmitter;
 import tower.BasicTower;
+import tower.EarthShake;
 import tower.Recovery;
 import tower.Tower;
+import tower.TowerException;
 import tower.engine.Utils;
 
 import java.awt.*;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @EntityInfo(width = 52, height = 41)
 @CollisionInfo(collisionBoxWidth = 16, collisionBoxHeight = 18, collision = false)
 @CombatInfo(hitpoints = 1000)
 public class TowerEntity extends Creature {
+  private static final Logger log = Logger.getLogger(TowerEntity.class.getName());
+
   private Tower tower;
   private int soldierCount;
   private int soldierCountMax;
   private int recoveryCount;
+  private int shakeCount;
 
   public TowerEntity(Tower tower) {
     super(tower.getName());
@@ -32,11 +40,13 @@ public class TowerEntity extends Creature {
     setVelocity(0);
     this.tower = tower;
     this.soldierCount = 0;
+    this.soldierCountMax = Math.min(Tower.MAX_SOLDIER_COUNT, tower.getSoldierList().size());
+    this.recoveryCount = isRecoverable() ? 2 : 0;
+    this.shakeCount = isShakable() ? 3 : 0;
+
     if (tower instanceof BasicTower) {
       getHitPoints().setMaxValue(((BasicTower) tower).getMaxLife());
     }
-    this.soldierCountMax = Math.min(Tower.MAX_SOLDIER_COUNT, tower.getSoldierList().size());
-    recoveryCount = isRecoverable() ? 2 : 0;
 
     addHitListener(e -> {
       IAnimationController controller = e.getEntity().getAnimationController();
@@ -63,7 +73,7 @@ public class TowerEntity extends Creature {
   }
 
   public boolean isRecoverable() {
-    return tower != null && tower instanceof Recovery;
+    return tower instanceof Recovery;
   }
 
   public int getRecoveryCount() {
@@ -80,11 +90,31 @@ public class TowerEntity extends Creature {
     }
   }
 
+  public boolean isShakable() {
+    return tower instanceof EarthShake;
+  }
+
+  public int getShakeCount() {
+    return shakeCount;
+  }
+
   public void consumeShake() {
-    Game.world().camera().shake(1.5, 30, 1000);
-    Game.loop().perform(1000, () -> {
-      Game.world().camera().setFocus(Game.world().environment().getCenter());
-    });
+    if (isShakable() && shakeCount > 0) {
+      shakeCount--;
+      Game.world().camera().shake(1.5, 30, 1000);
+      Game.loop().perform(1000, () -> {
+        Game.world().camera().setFocus(Game.world().environment().getCenter());
+      });
+      Random random = new Random();
+      try {
+        Game.world().environment().getCombatEntities().stream()
+            .filter(e -> e instanceof EnemyEntity)
+            .forEach(e -> ((EarthShake) tower).shake(new EarthShake.Ground(e)));
+      } catch (TowerException e) {
+        die();
+        log.log(Level.WARNING, "予期せぬエラーです。", e);
+      }
+    }
   }
 
   public void consumeShoot() {

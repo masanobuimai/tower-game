@@ -46,7 +46,7 @@ public abstract class MobEntity extends Creature implements IUpdateable {
       IAnimationController controller = e.getEntity().getAnimationController();
       controller.add(new OverlayPixelsImageEffect(50, Color.WHITE));
       Game.loop().perform(50, () -> controller.add(new OverlayPixelsImageEffect(50, Color.RED)));
-      if (e.getAbility().getExecutor() instanceof SpecialEntity) {
+      if (e.getAbility() != null && e.getAbility().getExecutor() instanceof SpecialEntity) {
         Emitter emitter = new FireEmitter((int) getX(), (int) getY());
         emitter.setHeight(getHeight());
         emitter.setTimeToLive(1500);

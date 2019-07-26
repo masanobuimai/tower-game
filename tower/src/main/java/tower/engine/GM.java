@@ -112,8 +112,10 @@ public class GM {
 
   public static void update() {
     if (timing()) {
-      Optional.ofNullable(towerEntity.getSoldierEntity())
-              .ifPresent(e -> Utils.spawn("respawn", e));
+      if (!towerEntity.isDead()) {
+        Optional.ofNullable(towerEntity.getSoldierEntity())
+                .ifPresent(e -> Utils.spawn("respawn", e));
+      }
       if (enemyCount < MAX_ENEMY_COUNT) {
         Utils.spawn("spawn", new EnemyEntity());
         enemyCount++;
@@ -136,6 +138,11 @@ public class GM {
   public static Pair<Boolean, Integer> recoverable() {
     return new Pair<>(towerEntity != null && towerEntity.isRecoverable(),
                       towerEntity != null ? towerEntity.getRecoveryCount() : 0);
+  }
+
+  public static Pair<Boolean, Integer> shakable() {
+    return new Pair<>(towerEntity != null && towerEntity.isShakable(),
+                      towerEntity != null ? towerEntity.getShakeCount() : 0);
   }
 
   public static class Pair<T1, T2> {
