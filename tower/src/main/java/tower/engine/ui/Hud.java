@@ -25,24 +25,25 @@ public class Hud extends GuiComponent {
 
   public void render(Graphics2D g) {
     renderHealthBar(g);
-    renderInventory(g);
+    renderAbility(g);
     renderCount(g);
   }
 
-  private static final Inventory[] INVENTORIES = new Inventory[]{
-      new Inventory("prop-painkiller",
-                    () -> GM.recoverable().v1, () -> GM.recoverable().v2),
-      new Inventory("prop-beer",
-                    () -> GM.shakable().v1, () -> GM.shakable().v2),
-      new Inventory("prop-carrot", () -> false, () -> 0),
+  private static final Ability[] ABILITIES = new Ability[]{
+      new Ability("prop-painkiller",
+                  () -> GM.abilityRecover().v1, () -> GM.abilityRecover().v2),
+      new Ability("prop-beer",
+                  () -> GM.abilityShake().v1, () -> GM.abilityShake().v2),
+      new Ability("prop-carrot",
+                  () -> GM.abilityRush().v1, () -> GM.abilityRush().v2),
       };
 
-  private static class Inventory {
+  private static class Ability {
     String name;
     Supplier<Boolean> available;
     Supplier<Integer> count;
 
-    public Inventory(String name, Supplier<Boolean> available, Supplier<Integer> count) {
+    public Ability(String name, Supplier<Boolean> available, Supplier<Integer> count) {
       this.name = name;
       this.available = available;
       this.count = count;
@@ -77,18 +78,18 @@ public class Hud extends GuiComponent {
     TextRenderer.renderWithOutline(g, healthRatioText, healthTextX, healthTextY, Color.BLACK);
   }
 
-  private void renderInventory(Graphics2D g) {
+  private void renderAbility(Graphics2D g) {
     double screenWidth = Game.screens().current().getWidth();
     double screenHeight = Game.screens().current().getHeight();
-    double inventoryCellWidth = screenWidth * 0.03;
-    double inventoryMargin = screenWidth * 0.015;
-    double inventoryHeight = inventoryCellWidth;
-    double inventoryX = (screenWidth / 2.0) - (inventoryCellWidth * 1.5) - (inventoryMargin);
-    double inventoryY = screenHeight * 0.05;
+    double abilityCellWidth = screenWidth * 0.03;
+    double abilityMargin = screenWidth * 0.015;
+    double abilityHeight = abilityCellWidth;
+    double abilityX = (screenWidth / 2.0) - (abilityCellWidth * 1.5) - (abilityMargin);
+    double abilityY = screenHeight * 0.05;
 
-    for (int i = 0; i < INVENTORIES.length; i++) {
-      Rectangle2D shadowRect = new Rectangle2D.Double(inventoryX + (inventoryCellWidth + inventoryMargin) * i,
-                                                      inventoryY, inventoryCellWidth, inventoryHeight);
+    for (int i = 0; i < ABILITIES.length; i++) {
+      Rectangle2D shadowRect = new Rectangle2D.Double(abilityX + (abilityCellWidth + abilityMargin) * i,
+                                                      abilityY, abilityCellWidth, abilityHeight);
       g.setColor(shadowColor);
       g.fill(shadowRect);
 
@@ -98,14 +99,14 @@ public class Hud extends GuiComponent {
       TextRenderer.renderWithOutline(g, "f" + (i + 1), shadowRect.getX(),
                                      shadowRect.getY() + fm.getHeight(), Color.BLACK);
 
-      if (INVENTORIES[i].available.get() && INVENTORIES[i].count.get() > 0) {
-        BufferedImage image = Resources.spritesheets().get(INVENTORIES[i].name).getImage();
-        double x = inventoryX + (inventoryCellWidth + inventoryMargin) * i + inventoryCellWidth * 0.5 - image.getWidth() / 2;
-        double y = inventoryY + inventoryHeight * 0.5 - image.getHeight() / 2;
+      if (ABILITIES[i].available.get() && ABILITIES[i].count.get() > 0) {
+        BufferedImage image = Resources.spritesheets().get(ABILITIES[i].name).getImage();
+        double x = abilityX + (abilityCellWidth + abilityMargin) * i + abilityCellWidth * 0.5 - image.getWidth() / 2;
+        double y = abilityY + abilityHeight * 0.5 - image.getHeight() / 2;
         ImageRenderer.render(g, image, new Point2D.Double(x, y));
 
         g.setColor(textColor);
-        TextRenderer.renderWithOutline(g, String.valueOf(INVENTORIES[i].count.get()), x, y * 2, Color.BLACK);
+        TextRenderer.renderWithOutline(g, String.valueOf(ABILITIES[i].count.get()), x, y * 2, Color.BLACK);
       }
     }
   }

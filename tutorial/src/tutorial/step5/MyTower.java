@@ -2,6 +2,7 @@ package tutorial.step5;
 
 import tower.EarthShake;
 import tower.Recovery;
+import tower.RushAttack;
 import tower.Soldier;
 import tower.Tower;
 import tower.TowerException;
@@ -13,7 +14,8 @@ import java.util.stream.IntStream;
 
 // Recoveryインターフェイスを実装すると，ライフ回復が可能になる
 // EarthShakeインターフェイスを実装すると，地面が揺れる
-public class MyTower extends Tower implements Recovery, EarthShake {
+// RushAttackインターフェイスを実装すると，突進攻撃ができる
+public class MyTower extends Tower implements Recovery, EarthShake, RushAttack {
   @Override
   public List<Soldier> getSoldierList() {
     List<Soldier> list = IntStream.rangeClosed(0, MAX_SOLDIER_COUNT)

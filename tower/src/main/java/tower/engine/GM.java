@@ -91,7 +91,7 @@ public class GM {
     Input.keyboard().onKeyReleased(KeyEvent.VK_F2,
                                    ke.apply(() -> towerEntity.consumeShake()));
     Input.keyboard().onKeyReleased(KeyEvent.VK_F3,
-                                   ke.apply(() -> towerEntity.consumeShoot()));
+                                   ke.apply(() -> towerEntity.consumeRush()));
   }
 
   private static void startGame() {
@@ -122,7 +122,7 @@ public class GM {
       }
     }
     if (towerEntity.isDead()
-        || enemyCount != 0 && Game.world().environment().getCombatEntities().size() == 1) {
+        || enemyCount >= MAX_ENEMY_COUNT && Game.world().environment().getCombatEntities().size() == 1) {
       state = GameState.GAMEOVER;
     }
   }
@@ -135,14 +135,19 @@ public class GM {
     return String.valueOf(enemyCount + "/" + MAX_ENEMY_COUNT);
   }
 
-  public static Pair<Boolean, Integer> recoverable() {
-    return new Pair<>(towerEntity != null && towerEntity.isRecoverable(),
+  public static Pair<Boolean, Integer> abilityRecover() {
+    return new Pair<>(towerEntity != null && towerEntity.canRecovery(),
                       towerEntity != null ? towerEntity.getRecoveryCount() : 0);
   }
 
-  public static Pair<Boolean, Integer> shakable() {
-    return new Pair<>(towerEntity != null && towerEntity.isShakable(),
+  public static Pair<Boolean, Integer> abilityShake() {
+    return new Pair<>(towerEntity != null && towerEntity.canShake(),
                       towerEntity != null ? towerEntity.getShakeCount() : 0);
+  }
+
+  public static Pair<Boolean, Integer> abilityRush() {
+    return new Pair<>(towerEntity != null && towerEntity.canRush(),
+                      towerEntity != null ? towerEntity.getRushCount() : 0);
   }
 
   public static class Pair<T1, T2> {

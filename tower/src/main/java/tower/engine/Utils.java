@@ -7,9 +7,10 @@ import de.gurkenlabs.litiengine.entities.Spawnpoint;
 import java.awt.*;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class Utils {
-  private static final HashMap<String, Font> fonts = new HashMap();
+  private static final Logger log = Logger.getLogger(Utils.class.getName());
 
   public static void spawn(String name, Creature entity) {
     Spawnpoint point = Game.world().environment().getSpawnpoint(name);
@@ -22,8 +23,11 @@ public class Utils {
     Game.world().environment().getCollisionBoxes().stream()
         .filter(c -> c.getTags().contains("wall"))
         .filter(c -> entity.getHitBox().intersects(c.getCollisionBox()))
-        .forEach(c -> entity.die());
+        .peek(c -> log.info(entity + " is arrived to corner."))
+        .forEach(c -> Game.world().environment().remove(entity));
   }
+
+  private static final HashMap<String, Font> fonts = new HashMap();
 
   public static Font fontNormal() {
     return getFont("PICO-8.ttf", 8.0f);

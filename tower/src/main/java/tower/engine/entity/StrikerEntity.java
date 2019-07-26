@@ -14,12 +14,12 @@ import java.util.logging.Logger;
 @EntityInfo(width = 18, height = 18)
 @MovementInfo(velocity = 260)
 @CollisionInfo(collisionBoxWidth = 16, collisionBoxHeight = 18, collision = false)
-public class SpecialEntity extends Creature implements IUpdateable {
-  private static final Logger log = Logger.getLogger(SpecialEntity.class.getName());
+public class StrikerEntity extends Creature implements IUpdateable {
+  private static final Logger log = Logger.getLogger(StrikerEntity.class.getName());
 
   private Shoot shoot;
 
-  public SpecialEntity() {
+  public StrikerEntity() {
     super("gurknukem");
     setTeam(MobEntity.LEFT_SIDE);
     shoot = new Shoot(this);

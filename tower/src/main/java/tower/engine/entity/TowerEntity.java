@@ -13,6 +13,7 @@ import de.gurkenlabs.litiengine.graphics.emitters.ShimmerEmitter;
 import tower.BasicTower;
 import tower.EarthShake;
 import tower.Recovery;
+import tower.RushAttack;
 import tower.Tower;
 import tower.TowerException;
 import tower.engine.Utils;
@@ -33,6 +34,7 @@ public class TowerEntity extends Creature {
   private int soldierCountMax;
   private int recoveryCount;
   private int shakeCount;
+  private int rushCount;
 
   public TowerEntity(Tower tower) {
     super(tower.getName());
@@ -41,8 +43,9 @@ public class TowerEntity extends Creature {
     this.tower = tower;
     this.soldierCount = 0;
     this.soldierCountMax = Math.min(Tower.MAX_SOLDIER_COUNT, tower.getSoldierList().size());
-    this.recoveryCount = isRecoverable() ? 2 : 0;
-    this.shakeCount = isShakable() ? 3 : 0;
+    this.recoveryCount = canRecovery() ? 2 : 0;
+    this.shakeCount = canShake() ? 3 : 0;
+    this.rushCount = canRush() ? 5 : 0;
 
     if (tower instanceof BasicTower) {
       getHitPoints().setMaxValue(((BasicTower) tower).getMaxLife());
@@ -72,7 +75,7 @@ public class TowerEntity extends Creature {
     return String.valueOf(soldierCount + "/" + soldierCountMax);
   }
 
-  public boolean isRecoverable() {
+  public boolean canRecovery() {
     return tower instanceof Recovery;
   }
 
@@ -81,7 +84,7 @@ public class TowerEntity extends Creature {
   }
 
   public void consumeRecovery() {
-    if (isRecoverable() && recoveryCount > 0) {
+    if (canRecovery() && recoveryCount > 0) {
       recoveryCount--;
       getHitPoints().setToMaxValue();
       ShimmerEmitter emitter = new ShimmerEmitter(this.getX(), this.getY());
@@ -90,7 +93,7 @@ public class TowerEntity extends Creature {
     }
   }
 
-  public boolean isShakable() {
+  public boolean canShake() {
     return tower instanceof EarthShake;
   }
 
@@ -99,7 +102,7 @@ public class TowerEntity extends Creature {
   }
 
   public void consumeShake() {
-    if (isShakable() && shakeCount > 0) {
+    if (canShake() && shakeCount > 0) {
       shakeCount--;
       Game.world().camera().shake(1.5, 30, 1000);
       Game.loop().perform(1000, () -> {
@@ -117,7 +120,18 @@ public class TowerEntity extends Creature {
     }
   }
 
-  public void consumeShoot() {
-    Utils.spawn("tower", new SpecialEntity());
+  public boolean canRush() {
+    return tower instanceof RushAttack;
+  }
+
+  public int getRushCount() {
+    return rushCount;
+  }
+
+  public void consumeRush() {
+    if (canRush() && rushCount > 0) {
+      rushCount--;
+      Utils.spawn("tower", new StrikerEntity());
+    }
   }
 }
