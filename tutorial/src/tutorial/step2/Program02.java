@@ -8,7 +8,7 @@ import tower.TowerGame;
 public class Program02 {
   public static void main(String[] args) {
     BasicTower tower = new BasicTower();
-    // TODO タワーの見た目を変える setter くらい用意するか...
+    tower.setMaxLife(10);
     TowerGame.start(tower);
   }
 }

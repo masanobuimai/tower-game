@@ -46,6 +46,9 @@ public class GM {
   }
 
   public static void start(Tower _tower) {
+    if (_tower == null) {
+      throw new NullPointerException("null入れてくんな。");
+    }
     state = GameState.READY;
     try (InputStream resource = GM.class.getResourceAsStream("/logging.properties")) {
       if (resource != null) {
@@ -110,7 +113,7 @@ public class GM {
   public static void update() {
     if (timing()) {
       Optional.ofNullable(towerEntity.getSoldierEntity())
-          .ifPresent(e -> Utils.spawn("respawn", e));
+              .ifPresent(e -> Utils.spawn("respawn", e));
       if (enemyCount < MAX_ENEMY_COUNT) {
         Utils.spawn("spawn", new EnemyEntity());
         enemyCount++;
@@ -139,7 +142,7 @@ public class GM {
     public final T1 v1;
     public final T2 v2;
 
-    public Pair(T1 v1, T2 v2) {
+    Pair(T1 v1, T2 v2) {
       this.v1 = v1;
       this.v2 = v2;
     }

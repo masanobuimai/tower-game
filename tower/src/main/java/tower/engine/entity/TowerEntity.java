@@ -10,6 +10,7 @@ import de.gurkenlabs.litiengine.graphics.animation.IAnimationController;
 import de.gurkenlabs.litiengine.graphics.emitters.Emitter;
 import de.gurkenlabs.litiengine.graphics.emitters.FireEmitter;
 import de.gurkenlabs.litiengine.graphics.emitters.ShimmerEmitter;
+import tower.BasicTower;
 import tower.Recovery;
 import tower.Tower;
 import tower.engine.Utils;
@@ -26,17 +27,15 @@ public class TowerEntity extends Creature {
   private int recoveryCount;
 
   public TowerEntity(Tower tower) {
-    super(tower != null ? tower.getName() : "");
+    super(tower.getName());
     setTeam(MobEntity.LEFT_SIDE);
     setVelocity(0);
     this.tower = tower;
     this.soldierCount = 0;
-    if (tower == null) {
-      hit(999);
-      this.soldierCountMax = 0;
-    } else {
-      this.soldierCountMax = Math.min(Tower.MAX_SOLDIER_COUNT, tower.getSoldierList().size());
+    if (tower instanceof BasicTower) {
+      getHitPoints().setMaxValue(((BasicTower) tower).getMaxLife());
     }
+    this.soldierCountMax = Math.min(Tower.MAX_SOLDIER_COUNT, tower.getSoldierList().size());
     recoveryCount = isRecoverable() ? 2 : 0;
 
     addHitListener(e -> {

@@ -4,7 +4,10 @@ import tower.engine.GM;
 
 public class TowerGame {
   public static void start() {
-    GM.start(null);
+    BasicTower tower = new BasicTower();
+    tower.setName("");
+    tower.setMaxLife(1);
+    GM.start(tower);
   }
 
   public static void start(Tower tower) {
