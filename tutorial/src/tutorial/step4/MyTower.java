@@ -1,4 +1,4 @@
-package tutorial.step5;
+package tutorial.step4;
 
 import tower.EarthShake;
 import tower.Recovery;

@@ -2,10 +2,9 @@ package tower;
 
 import tower.engine.GM;
 
-
+// TODO MapとListの集合体のほうがよかったかも...
 public final class TowerInfo {
-  TowerInfo() {
-  }
+  TowerInfo() {}
 
   public Tower.State getState() {
     return GM.getState();

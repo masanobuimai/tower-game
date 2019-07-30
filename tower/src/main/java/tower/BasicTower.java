@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class BasicTower extends Tower {
+public final class BasicTower extends Tower {
   private String name = "bunker";
   private static int MAX_LIFE_UPPER = 2_000;
   private int maxLife = 1_000;
+  private Soldier soldier;
 
   public void setName(String name) {
     this.name = name;
@@ -26,15 +27,14 @@ public class BasicTower extends Tower {
 
   @Override
   public final List<Soldier> getSoldierList() {
-    if (getSoldier() != null) {
-      return Stream.of(getSoldier()).collect(Collectors.toList());
+    if (soldier != null) {
+      return Stream.of(soldier).collect(Collectors.toList());
     } else {
       return Collections.emptyList();
     }
   }
 
-
-  protected Soldier getSoldier() {
-    return null;
+  public void setSoldier(Soldier soldier) {
+    this.soldier = soldier;
   }
 }

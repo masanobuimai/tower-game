@@ -1,4 +1,4 @@
-package tutorial.step4;
+package tutorial.step3;
 
 import tower.Soldier;
 
