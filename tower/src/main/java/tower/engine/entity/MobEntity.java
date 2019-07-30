@@ -54,7 +54,6 @@ public abstract class MobEntity extends Creature implements IUpdateable {
       }
     });
     addDeathListener(e -> {
-      log.info(() -> e + " is dead...");
       Game.world().environment().remove(e);
     });
   }

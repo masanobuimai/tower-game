@@ -1,0 +1,27 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Program02" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="tutorial.step2.Program02" />
+    <module name="tutorial" />
+    <extension name="chronon">
+      <include>
+        <pattern>
+          <option name="PATTERN" value="tutorial.step1.**" />
+          <option name="ENABLED" value="true" />
+          <option name="INCLUDE" value="true" />
+        </pattern>
+      </include>
+    </extension>
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="tutorial.step1.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="tower.main:jar" />
+      </option>
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

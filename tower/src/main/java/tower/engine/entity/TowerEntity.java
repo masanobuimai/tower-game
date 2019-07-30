@@ -15,7 +15,6 @@ import tower.EarthShake;
 import tower.Recovery;
 import tower.RushAttack;
 import tower.Tower;
-import tower.TowerException;
 import tower.engine.Utils;
 
 import java.awt.*;
@@ -43,9 +42,9 @@ public class TowerEntity extends Creature {
     this.tower = tower;
     this.soldierCount = 0;
     this.soldierCountMax = Math.min(Tower.MAX_SOLDIER_COUNT, tower.getSoldierList().size());
-    this.recoveryCount = canRecovery() ? 2 : 0;
-    this.shakeCount = canShake() ? 3 : 0;
-    this.rushCount = canRush() ? 5 : 0;
+    this.recoveryCount = canRecovery() ? Recovery.MAX_RECOVERY_COUNT : 0;
+    this.shakeCount = canShake() ? EarthShake.MAX_EARTH_SHAKE_COUNT : 0;
+    this.rushCount = canRush() ? RushAttack.MAX_RUSH_ATTACK_COUNT : 0;
 
     if (tower instanceof BasicTower) {
       getHitPoints().setMaxValue(((BasicTower) tower).getMaxLife());
@@ -55,7 +54,6 @@ public class TowerEntity extends Creature {
       IAnimationController controller = e.getEntity().getAnimationController();
       controller.add(new OverlayPixelsImageEffect(50, Color.WHITE));
       Game.loop().perform(50, () -> controller.add(new OverlayPixelsImageEffect(50, Color.RED)));
-      log.info("tower was damaged from " + e.getEntity());
     });
     addDeathListener(e -> {
       Emitter emitter = new FireEmitter((int) e.getX(), (int) e.getY());
@@ -114,7 +112,7 @@ public class TowerEntity extends Creature {
         Game.world().environment().getCombatEntities().stream()
             .filter(e -> e instanceof EnemyEntity)
             .forEach(e -> ((EarthShake) tower).shake(new EarthShake.Ground(e)));
-      } catch (TowerException e) {
+      } catch (Exception e) {
         die();
         log.log(Level.WARNING, "予期せぬエラーです。", e);
       }

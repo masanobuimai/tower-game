@@ -5,6 +5,8 @@ import de.gurkenlabs.litiengine.entities.ICombatEntity;
 import java.util.Random;
 
 public interface EarthShake {
+  int MAX_EARTH_SHAKE_COUNT = 3;
+
   void shake(Ground ground);
 
   final class Ground {

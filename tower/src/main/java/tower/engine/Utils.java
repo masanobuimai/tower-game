@@ -17,14 +17,13 @@ public class Utils {
     point.spawn(entity);
     entity.setX(entity.getX() - (entity.getWidth() - point.getWidth()) / 2);
     entity.setY(point.getY() - entity.getHeight());
-    log.info("spawn " + entity);
   }
 
   public static void checkCorner(Creature entity) {
     Game.world().environment().getCollisionBoxes().stream()
         .filter(c -> c.getTags().contains("wall"))
         .filter(c -> entity.getHitBox().intersects(c.getCollisionBox()))
-        .peek(c -> log.info(entity + " is arrived to corner."))
+//        .peek(c -> log.info(entity + " is arrived to corner."))
         .forEach(c -> Game.world().environment().remove(entity));
   }
 

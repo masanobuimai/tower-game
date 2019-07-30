@@ -12,6 +12,7 @@ import tower.engine.GM;
 import tower.engine.Utils;
 import tower.engine.entity.ext.Shoot;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @EntityInfo(width = 18, height = 18)
@@ -30,7 +31,6 @@ public class StrikerEntity extends Creature implements IUpdateable {
     shoot = new Shoot(this);
     this.rush = rush;
     addDeathListener(e -> {
-      log.info(() -> e + " is dead...");
       Game.world().environment().remove(e);
     });
   }
@@ -51,8 +51,13 @@ public class StrikerEntity extends Creature implements IUpdateable {
     return result;
   }
 
-  public boolean checkTarget(ICombatEntity e) {
-    return rush.attack(new Enemy(e));
+  public boolean checkTarget(ICombatEntity entity) {
+    try {
+      return rush.attack(new Enemy(entity));
+    } catch (Exception e) {
+      GM.tower().die();
+      log.log(Level.WARNING, "—\Šú‚¹‚ÊƒGƒ‰[‚Å‚·B", e);
+    }
   }
 
   public static class Enemy implements RushAttack.Enemy {
