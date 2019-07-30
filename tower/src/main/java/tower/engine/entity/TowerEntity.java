@@ -14,10 +14,12 @@ import tower.BasicTower;
 import tower.EarthShake;
 import tower.Recovery;
 import tower.RushAttack;
+import tower.Soldier;
 import tower.Tower;
 import tower.engine.Utils;
 
 import java.awt.*;
+import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,10 +87,40 @@ public class TowerEntity extends Creature {
   public void consumeRecovery() {
     if (canRecovery() && recoveryCount > 0) {
       recoveryCount--;
-      getHitPoints().setToMaxValue();
-      ShimmerEmitter emitter = new ShimmerEmitter(this.getX(), this.getY());
-      emitter.setTimeToLive(2000);
-      Game.world().environment().add(emitter);
+      Map<Recovery.Type, Boolean> targets = ((Recovery) tower).targets();
+      double ratio = targets.values().stream().filter(v -> v).count() / Recovery.Type.values().length;
+      targets.entrySet().stream()
+             .filter(m -> m.getKey() == Recovery.Type.TOWER && m.getValue())
+             .forEach(m -> {
+               int hp = (int) (getHitPoints().getMaxValue() * ratio);
+               getHitPoints().setBaseValue(hp);
+               ShimmerEmitter emitter = new ShimmerEmitter(this.getX(), this.getY());
+               emitter.setTimeToLive(2000);
+               Game.world().environment().add(emitter);
+             });
+      targets.entrySet().stream()
+             .filter(m -> m.getKey() == Recovery.Type.SOLDERS && m.getValue())
+             .forEach(m -> {
+               int hp = (int) (new SoldierEntity(new Soldier()).getHitPoints().getMaxValue() * ratio);
+               Game.world().environment().getCombatEntities().stream()
+                   .filter(e -> e instanceof SoldierEntity)
+                   .forEach(e -> {
+                     e.getHitPoints().setBaseValue(hp);
+                     ShimmerEmitter emitter = new ShimmerEmitter(e.getX(), e.getY());
+                     emitter.setTimeToLive(1000);
+                     Game.world().environment().add(emitter);
+                   });
+             });
+      targets.entrySet().stream()
+             .filter(m -> m.getKey() == Recovery.Type.ENEMIES && m.getValue())
+             .forEach(m -> {
+               Game.world().environment().getCombatEntities().stream()
+                   .filter(e -> e instanceof EnemyEntity)
+                   .forEach(e -> {
+                     int damage = (int) (e.getHitPoints().getCurrentValue() / (2 * ratio));
+                     e.hit(damage);
+                   });
+             });
     }
   }
 

@@ -56,7 +56,8 @@ public class StrikerEntity extends Creature implements IUpdateable {
       return rush.attack(new Enemy(entity));
     } catch (Exception e) {
       GM.tower().die();
-      log.log(Level.WARNING, "—\Šú‚¹‚ÊƒGƒ‰[‚Å‚·B", e);
+      log.log(Level.WARNING, "äºˆæœŸã›ã¬ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚", e);
+      return false;
     }
   }
 
