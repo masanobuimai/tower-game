@@ -23,11 +23,11 @@ public final class TowerInfo {
   }
 
   public int getSoliderCount() {
-    return GM.tower().getSoldierCount();
+    return GM.tower() != null ? GM.tower().getSoldierCount() : -1;
   }
 
   public int getDeadSoliderCount() {
-    return GM.tower().getDeadSoldierCount();
+    return GM.tower() != null ? GM.tower().getDeadSoldierCount() : -1;
   }
 
   public int getEnemyCount() {
