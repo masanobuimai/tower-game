@@ -7,5 +7,6 @@ public class Program05 {
   public static void main(String[] args) {
     Tower tower = new MyTower();
     TowerGame.start(tower);
+    System.out.println("finish");
   }
 }

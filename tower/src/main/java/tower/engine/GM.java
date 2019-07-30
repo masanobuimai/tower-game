@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.LogManager;
@@ -25,14 +28,11 @@ import java.util.stream.Stream;
 public class GM {
   private static final Logger log = Logger.getLogger(GM.class.getName());
 
-  public enum GameState {
-    READY, INGAME, GAMEOVER
-  }
-
-  private static GameState state;
+  private static Tower.State state;
 
   public static final int MAX_ENEMY_COUNT = 100;
 
+  private static boolean terminating;
 
   private static long gameStartTick;
   private static int enemyCount;
@@ -48,7 +48,7 @@ public class GM {
     if (_tower == null) {
       throw new NullPointerException("null入れてくんな。");
     }
-    state = GameState.READY;
+    state = Tower.State.READY;
     try (InputStream resource = GM.class.getResourceAsStream("/logging.properties")) {
       if (resource != null) {
         LogManager.getLogManager().readConfiguration(resource);
@@ -73,18 +73,37 @@ public class GM {
 
     tower = _tower;
     Game.start();
+
+    // ムリヤリ同期処理ふうにみせる
+    while (!terminating) {
+      try {
+        TimeUnit.MILLISECONDS.sleep(500);
+      } catch (InterruptedException ignore) {
+      }
+    }
+    ExecutorService es = Executors.newFixedThreadPool(1);
+    es.execute(() -> {
+      try {
+        TimeUnit.SECONDS.sleep(2);
+      } catch (InterruptedException ignore) {
+      }
+      System.exit(0);
+    });
   }
 
-  public static boolean gameover() {
-    return state == GameState.GAMEOVER;
+  public static Tower.State getState() {
+    return state;
   }
 
   private static void initInputDevice() {
     Input.mouse().setGrabMouse(false);
-    Input.keyboard().onKeyReleased(KeyEvent.VK_ESCAPE, e -> System.exit(0));
+    Input.keyboard().onKeyReleased(KeyEvent.VK_ESCAPE, e -> {
+      terminating = true;
+      log.info("ESC!!! " + terminating);
+    });
     Input.keyboard().onKeyReleased(KeyEvent.VK_SPACE, e -> startGame());
     Function<Runnable, Consumer<KeyEvent>> ke = r ->
-        e -> { if (state == GameState.INGAME && !tower().isDead()) r.run(); };
+        e -> { if (state == Tower.State.INGAME && !tower().isDead()) r.run(); };
     Input.keyboard().onKeyReleased(KeyEvent.VK_F1,
                                    ke.apply(() -> towerEntity.consumeRecovery()));
     Input.keyboard().onKeyReleased(KeyEvent.VK_F2,
@@ -94,8 +113,8 @@ public class GM {
   }
 
   private static void startGame() {
-    if (state == GameState.INGAME) return;
-    state = GameState.INGAME;
+    if (state == Tower.State.INGAME) return;
+    state = Tower.State.INGAME;
 
     // 前のステージの後片付け
     Stream.concat(Game.world().environment().getCombatEntities().stream(),
@@ -116,7 +135,7 @@ public class GM {
   private static boolean spawnTick = false;
 
   public static void update() {
-    if (state != GameState.INGAME) return;
+    if (state != Tower.State.INGAME) return;
     if (timing()) {
       if (!towerEntity.isDead() && spawnTick) {
         Optional.ofNullable(towerEntity.getSoldierEntity())
@@ -130,7 +149,7 @@ public class GM {
     }
     if (towerEntity.isDead()
         || enemyCount >= MAX_ENEMY_COUNT && Game.world().environment().getCombatEntities().size() == 1) {
-      state = GameState.GAMEOVER;
+      state = Tower.State.GAMEOVER;
     }
   }
 
@@ -144,6 +163,10 @@ public class GM {
 
   public static String enemyCount() {
     return String.valueOf(enemyCount + "/" + MAX_ENEMY_COUNT);
+  }
+
+  public static int getEnemyCount() {
+    return enemyCount;
   }
 
   public static Pair<Boolean, Integer> abilityRecover() {

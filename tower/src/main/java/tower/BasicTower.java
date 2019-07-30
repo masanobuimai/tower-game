@@ -14,11 +14,6 @@ public class BasicTower extends Tower {
     this.name = name;
   }
 
-  @Override
-  public String getName() {
-    return name;
-  }
-
   // 1～MAX_LIFE_UPPERの範囲で設定する
   public void setMaxLife(int life) {
     maxLife = life < 1 ? 1
