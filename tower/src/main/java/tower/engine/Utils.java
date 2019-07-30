@@ -17,6 +17,7 @@ public class Utils {
     point.spawn(entity);
     entity.setX(entity.getX() - (entity.getWidth() - point.getWidth()) / 2);
     entity.setY(point.getY() - entity.getHeight());
+    log.info("spawn " + entity);
   }
 
   public static void checkCorner(Creature entity) {

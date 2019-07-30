@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 // ゲームマスター
 public class GM {
@@ -32,10 +33,8 @@ public class GM {
 
   public static final int MAX_ENEMY_COUNT = 100;
 
-  private static boolean timing() {
-    return Game.loop().getTicks() % 30 == 0;
-  }
 
+  private static long gameStartTick;
   private static int enemyCount;
 
   private static Tower tower;
@@ -95,11 +94,15 @@ public class GM {
   }
 
   private static void startGame() {
-    log.info(() -> "state:" + state);
     if (state == GameState.INGAME) return;
-
-    // TODO ゲームオーバー後の再開がヘンなので何とかしたい
     state = GameState.INGAME;
+
+    // 前のステージの後片付け
+    Stream.concat(Game.world().environment().getCombatEntities().stream(),
+                  Game.world().environment().getEmitters().stream())
+          .forEach(e -> Game.world().environment().remove(e));
+
+    gameStartTick = Game.time().now();
     enemyCount = 0;
     towerEntity = new TowerEntity(tower);
     Game.window().getRenderComponent().fadeOut(500);
@@ -113,6 +116,7 @@ public class GM {
   private static boolean spawnTick = false;
 
   public static void update() {
+    if (state != GameState.INGAME) return;
     if (timing()) {
       if (!towerEntity.isDead() && spawnTick) {
         Optional.ofNullable(towerEntity.getSoldierEntity())
@@ -128,6 +132,10 @@ public class GM {
         || enemyCount >= MAX_ENEMY_COUNT && Game.world().environment().getCombatEntities().size() == 1) {
       state = GameState.GAMEOVER;
     }
+  }
+
+  private static boolean timing() {
+    return Game.time().since(gameStartTick) > 30 && Game.loop().getTicks() % 30 == 0;
   }
 
   public static String soldierCount() {

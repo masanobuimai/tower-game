@@ -66,7 +66,6 @@ public class MainScreen extends GameScreen implements IUpdateable {
   public void prepare() {
     super.prepare();
     Game.loop().attach(this);
-    Game.world().loadEnvironment("map");
   }
 
   @Override

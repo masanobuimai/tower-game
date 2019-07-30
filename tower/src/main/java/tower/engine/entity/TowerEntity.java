@@ -55,6 +55,7 @@ public class TowerEntity extends Creature {
       IAnimationController controller = e.getEntity().getAnimationController();
       controller.add(new OverlayPixelsImageEffect(50, Color.WHITE));
       Game.loop().perform(50, () -> controller.add(new OverlayPixelsImageEffect(50, Color.RED)));
+      log.info("tower was damaged from " + e.getEntity());
     });
     addDeathListener(e -> {
       Emitter emitter = new FireEmitter((int) e.getX(), (int) e.getY());
