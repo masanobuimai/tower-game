@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/tower.iml" filepath="$PROJECT_DIR$/.idea/modules/tower.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/tower-game.iml" filepath="$PROJECT_DIR$/.idea/tower-game.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/tower.main.iml" filepath="$PROJECT_DIR$/.idea/modules/tower.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/tower.test.iml" filepath="$PROJECT_DIR$/.idea/modules/tower.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/tutorial/tutorial.iml" filepath="$PROJECT_DIR$/tutorial/tutorial.iml" />
