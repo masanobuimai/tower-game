@@ -20,8 +20,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 // ゲームマスター
 public class GM {
@@ -38,17 +40,13 @@ public class GM {
   private static long gameStartTick;
   private static int enemyCount;
 
-  private static Tower tower;
   private static TowerEntity towerEntity;
 
   public static TowerEntity tower() {
     return towerEntity;
   }
 
-  public static void start(Tower _tower) {
-    if (_tower == null) {
-      throw new NullPointerException("null入れてくんな。");
-    }
+  private static void init() {
     state = State.READY;
     try (InputStream resource = GM.class.getResourceAsStream("/logging.properties")) {
       if (resource != null) {
@@ -69,12 +67,65 @@ public class GM {
     Camera cam = new Camera();
     cam.setFocus(Game.world().environment().getCenter());
     Game.world().setCamera(cam);
+  }
 
-    initInputDevice();
+  public static void start(Tower tower) {
+    if (tower == null) {
+      throw new NullPointerException("null入れてくんな。");
+    }
+    init();
+    initInputDevice(() -> {
+      if (state == State.INGAME) return;
+      Game.window().getRenderComponent().fadeOut(500);
+      if (state == State.GAMEOVER) {
+        terminating = true;
+        return;
+      }
+      state = State.INGAME;
+      gameStartTick = Game.time().now();
+      enemyCount = 0;
+      towerEntity = new TowerEntity(tower);
+      Game.loop().perform(600, () -> {
+        Game.screens().display("main");
+        Game.window().getRenderComponent().fadeIn(500);
+        Utils.spawn("tower", towerEntity);
+      });
+    });
 
-    tower = _tower;
     Game.start();
+    running();
+  }
 
+  public static void start(Supplier<Tower> tower) {
+    if (tower == null) {
+      throw new NullPointerException("null入れてくんな。");
+    }
+    init();
+    initInputDevice(() -> {
+      if (state == State.INGAME) return;
+      state = State.INGAME;
+
+      Game.window().getRenderComponent().fadeOut(500);
+      // 前のステージの後片付け
+      Stream.concat(Game.world().environment().getCombatEntities().stream(),
+                    Game.world().environment().getEmitters().stream())
+            .forEach(e -> Game.world().environment().remove(e));
+
+      gameStartTick = Game.time().now();
+      enemyCount = 0;
+      towerEntity = new TowerEntity(tower.get());
+      Utils.spawn("tower", towerEntity);
+      Game.loop().perform(600, () -> {
+        Game.screens().display("main");
+        Game.window().getRenderComponent().fadeIn(500);
+      });
+    });
+
+    Game.start();
+    running();
+  }
+
+  public static void running() {
     // ムリヤリ同期処理ふうにみせる
     while (!terminating) {
       try {
@@ -96,9 +147,12 @@ public class GM {
     return state;
   }
 
-  private static void initInputDevice() {
+  private static void initInputDevice(Runnable pushSpaceKey) {
     Input.mouse().setGrabMouse(false);
-    Input.keyboard().onKeyReleased(KeyEvent.VK_SPACE, e -> startGame());
+    Input.keyboard().onKeyReleased(KeyEvent.VK_ESCAPE, e -> {
+      if (state == State.GAMEOVER) terminating = true;
+    });
+    Input.keyboard().onKeyReleased(KeyEvent.VK_SPACE, e -> pushSpaceKey.run());
     Function<Runnable, Consumer<KeyEvent>> ke = r ->
         e -> { if (state == State.INGAME && !tower().isDead()) r.run(); };
     Input.keyboard().onKeyReleased(KeyEvent.VK_F1,
@@ -107,24 +161,6 @@ public class GM {
                                    ke.apply(() -> towerEntity.consumeShake()));
     Input.keyboard().onKeyReleased(KeyEvent.VK_F3,
                                    ke.apply(() -> towerEntity.consumeRush()));
-  }
-
-  private static void startGame() {
-    if (state == State.INGAME) return;
-    Game.window().getRenderComponent().fadeOut(500);
-    if (state == State.GAMEOVER) {
-      terminating = true;
-      return;
-    }
-    state = State.INGAME;
-    gameStartTick = Game.time().now();
-    enemyCount = 0;
-    towerEntity = new TowerEntity(tower);
-    Game.loop().perform(600, () -> {
-      Game.screens().display("main");
-      Game.window().getRenderComponent().fadeIn(500);
-      Utils.spawn("tower", towerEntity);
-    });
   }
 
   private static boolean spawnTick = false;
@@ -149,7 +185,7 @@ public class GM {
   }
 
   private static boolean timing() {
-    return Game.time().since(gameStartTick) > 30 && Game.loop().getTicks() % 30 == 0;
+    return Game.time().since(gameStartTick) > 30 && Game.loop().getTicks() % 15 == 0;
   }
 
   public static String soldierCount() {
