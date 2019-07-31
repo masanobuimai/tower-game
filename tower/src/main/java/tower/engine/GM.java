@@ -36,6 +36,7 @@ public class GM {
   public static final int MAX_ENEMY_COUNT = 100;
 
   private static boolean terminating;
+  private static boolean speedUp;
 
   private static long gameStartTick;
   private static int enemyCount;
@@ -75,20 +76,16 @@ public class GM {
     }
     init();
     initInputDevice(() -> {
-      if (state == State.INGAME) return;
+      if (state != State.READY) return;
       Game.window().getRenderComponent().fadeOut(500);
-      if (state == State.GAMEOVER) {
-        terminating = true;
-        return;
-      }
       state = State.INGAME;
       gameStartTick = Game.time().now();
       enemyCount = 0;
       towerEntity = new TowerEntity(tower);
+      Utils.spawn("tower", towerEntity);
       Game.loop().perform(600, () -> {
         Game.screens().display("main");
         Game.window().getRenderComponent().fadeIn(500);
-        Utils.spawn("tower", towerEntity);
       });
     });
 
@@ -150,9 +147,13 @@ public class GM {
   private static void initInputDevice(Runnable pushSpaceKey) {
     Input.mouse().setGrabMouse(false);
     Input.keyboard().onKeyReleased(KeyEvent.VK_ESCAPE, e -> {
-      if (state == State.GAMEOVER) terminating = true;
+      if (state == State.GAMEOVER) {
+        Game.window().getRenderComponent().fadeOut(500);
+        terminating = true;
+      }
     });
     Input.keyboard().onKeyReleased(KeyEvent.VK_SPACE, e -> pushSpaceKey.run());
+    Input.keyboard().onKeyReleased(KeyEvent.VK_S, e -> speedUp = !speedUp);
     Function<Runnable, Consumer<KeyEvent>> ke = r ->
         e -> { if (state == State.INGAME && !tower().isDead()) r.run(); };
     Input.keyboard().onKeyReleased(KeyEvent.VK_F1,
@@ -185,7 +186,8 @@ public class GM {
   }
 
   private static boolean timing() {
-    return Game.time().since(gameStartTick) > 30 && Game.loop().getTicks() % 15 == 0;
+    return Game.time().since(gameStartTick) > 30
+           && Game.loop().getTicks() % (speedUp ? 15 : 30) == 0;
   }
 
   public static String soldierCount() {

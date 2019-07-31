@@ -37,15 +37,17 @@ public class MainScreen extends GameScreen implements IUpdateable {
     if (GM.getState() == GM.State.GAMEOVER) {
       // タワーだけになったらゲームオーバー
       g.setColor(Color.WHITE);
+      g.setFont(Utils.fontNormal());
+      TextRenderer.renderWithOutline(g, "esc key -> exit", 10, 10, Color.BLACK);
       g.setFont(Utils.fontLarge());
       TextRenderer.renderWithOutline(g, "game over:" + (GM.tower().isDead() ? "loose" : "win!!"),
-                                     Game.screens().current().getWidth() * 0.3,
-                                     Game.screens().current().getHeight() * 0.3,
+                                     Utils.screenWidth() * 0.3,
+                                     Utils.screenHeight() * 0.3,
                                      Color.BLACK);
       FontMetrics fm = g.getFontMetrics();
       TextRenderer.renderWithOutline(g, "score :" + GM.tower().score(),
-                                     Game.screens().current().getWidth() * 0.3,
-                                     Game.screens().current().getHeight() * 0.3 + fm.getHeight() * 1.5,
+                                     Utils.screenWidth() * 0.3,
+                                     Utils.screenHeight() * 0.3 + fm.getHeight() * 1.5,
                                      Color.BLACK);
     }
   }

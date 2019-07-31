@@ -1,6 +1,5 @@
 package tower.engine.ui;
 
-import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.GuiComponent;
@@ -51,12 +50,10 @@ public class Hud extends GuiComponent {
   }
 
   private void renderHealthBar(Graphics2D g) {
-    double screenWidth = Game.screens().current().getWidth();
-    double screenHeight = Game.screens().current().getHeight();
-    double healthBarMaxWidth = screenWidth * 0.3;
-    double healthBarHeight = screenHeight * 0.05;
-    double healthBarX = (screenWidth - healthBarMaxWidth) / 2.0D;
-    double healthBarY = screenHeight * 0.85;
+    double healthBarMaxWidth = Utils.screenWidth() * 0.3;
+    double healthBarHeight = Utils.screenHeight() * 0.05;
+    double healthBarX = (Utils.screenWidth() - healthBarMaxWidth) / 2.0D;
+    double healthBarY = Utils.screenHeight() * 0.85;
     int hp = GM.tower().getHitPoints().getCurrentValue();
     int maxHp = GM.tower().getHitPoints().getMaxValue();
     double currentHealthRatio = hp * 1.0 / maxHp;
@@ -79,13 +76,11 @@ public class Hud extends GuiComponent {
   }
 
   private void renderAbility(Graphics2D g) {
-    double screenWidth = Game.screens().current().getWidth();
-    double screenHeight = Game.screens().current().getHeight();
-    double abilityCellWidth = screenWidth * 0.03;
-    double abilityMargin = screenWidth * 0.015;
+    double abilityCellWidth = Utils.screenWidth() * 0.03;
+    double abilityMargin = Utils.screenWidth() * 0.015;
     double abilityHeight = abilityCellWidth;
-    double abilityX = (screenWidth / 2.0) - (abilityCellWidth * 1.5) - (abilityMargin);
-    double abilityY = screenHeight * 0.05;
+    double abilityX = (Utils.screenWidth() / 2.0) - (abilityCellWidth * 1.5) - (abilityMargin);
+    double abilityY = Utils.screenHeight() * 0.05;
 
     for (int i = 0; i < ABILITIES.length; i++) {
       Rectangle2D shadowRect = new Rectangle2D.Double(abilityX + (abilityCellWidth + abilityMargin) * i,
@@ -112,19 +107,17 @@ public class Hud extends GuiComponent {
   }
 
   private void renderCount(Graphics2D g) {
-    double screenWidth = Game.screens().current().getWidth();
-    double screenHeight = Game.screens().current().getHeight();
     g.setFont(Utils.fontLarge());
     FontMetrics fm = g.getFontMetrics();
     g.setColor(textColor);
 
-    double countY = screenHeight * 0.85;
+    double countY = Utils.screenHeight() * 0.85;
     String countText = GM.soldierCount();
-    double countX = screenWidth * 0.05 - (double) fm.stringWidth(countText) / 2.0D;
+    double countX = Utils.screenWidth() * 0.05 - (double) fm.stringWidth(countText) / 2.0D;
     TextRenderer.renderWithOutline(g, countText, countX, countY, Color.BLACK);
 
     String enemyCountText = GM.enemyCount();
-    double enemyCountX = screenWidth * 0.95 - (double) fm.stringWidth(enemyCountText) / 2.0D;
+    double enemyCountX = Utils.screenWidth() * 0.95 - (double) fm.stringWidth(enemyCountText) / 2.0D;
     TextRenderer.renderWithOutline(g, enemyCountText, enemyCountX, countY, Color.BLACK);
   }
 }

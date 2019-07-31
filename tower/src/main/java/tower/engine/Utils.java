@@ -50,4 +50,12 @@ public class Utils {
       throw new RuntimeException(e);
     }
   }
+
+  public static double screenHeight() {
+    return Game.screens().current().getHeight();
+  }
+
+  public static double screenWidth() {
+    return Game.screens().current().getWidth();
+  }
 }
