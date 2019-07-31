@@ -22,7 +22,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 // ゲームマスター
 public class GM {
@@ -97,10 +96,6 @@ public class GM {
 
   private static void initInputDevice() {
     Input.mouse().setGrabMouse(false);
-    Input.keyboard().onKeyReleased(KeyEvent.VK_ESCAPE, e -> {
-      terminating = true;
-      log.info("ESC!!! " + terminating);
-    });
     Input.keyboard().onKeyReleased(KeyEvent.VK_SPACE, e -> startGame());
     Function<Runnable, Consumer<KeyEvent>> ke = r ->
         e -> { if (state == Tower.State.INGAME && !tower().isDead()) r.run(); };
@@ -114,17 +109,15 @@ public class GM {
 
   private static void startGame() {
     if (state == Tower.State.INGAME) return;
+    Game.window().getRenderComponent().fadeOut(500);
+    if (state == Tower.State.GAMEOVER) {
+      terminating = true;
+      return;
+    }
     state = Tower.State.INGAME;
-
-    // 前のステージの後片付け
-    Stream.concat(Game.world().environment().getCombatEntities().stream(),
-                  Game.world().environment().getEmitters().stream())
-          .forEach(e -> Game.world().environment().remove(e));
-
     gameStartTick = Game.time().now();
     enemyCount = 0;
     towerEntity = new TowerEntity(tower);
-    Game.window().getRenderComponent().fadeOut(500);
     Game.loop().perform(600, () -> {
       Game.screens().display("main");
       Game.window().getRenderComponent().fadeIn(500);
