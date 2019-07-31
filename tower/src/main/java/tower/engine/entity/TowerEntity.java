@@ -16,7 +16,6 @@ import tower.Recovery;
 import tower.RushAttack;
 import tower.Soldier;
 import tower.Tower;
-import tower.engine.GM;
 import tower.engine.Utils;
 
 import java.awt.*;
@@ -81,7 +80,7 @@ public class TowerEntity extends Creature {
   }
 
   public String soldierCount() {
-    return String.valueOf(soldierCount + "/" + soldierCountMax);
+    return soldierCount + "/" + soldierCountMax;
   }
 
   public int getSoldierCount() {
@@ -184,14 +183,9 @@ public class TowerEntity extends Creature {
   }
 
   public int score() {
-    // ゲームオーバ以外は０点
-    if (GM.getState() != Tower.State.GAMEOVER) return 0;
-
     int point = 0;
     point += getHitPoints().getCurrentValue() * 2;  // 残りライフの2倍
-    if (GM.getState() == Tower.State.GAMEOVER) {
-      if (!isDead()) point += 10_000;               // 勝利ボーナス 10,000点
-    }
+    if (!isDead()) point += 10_000;               // 勝利ボーナス 10,000点
     point += (getSoldierCount() - getDeadSoldierCount()) * 1000;  // 生存兵×1,000点
 
     // アビリティの残り回数×5,000点

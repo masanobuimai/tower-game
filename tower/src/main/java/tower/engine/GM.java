@@ -27,7 +27,9 @@ import java.util.logging.Logger;
 public class GM {
   private static final Logger log = Logger.getLogger(GM.class.getName());
 
-  private static Tower.State state;
+  public enum State {READY, INGAME, GAMEOVER;}
+
+  private static State state;
 
   public static final int MAX_ENEMY_COUNT = 100;
 
@@ -47,7 +49,7 @@ public class GM {
     if (_tower == null) {
       throw new NullPointerException("null入れてくんな。");
     }
-    state = Tower.State.READY;
+    state = State.READY;
     try (InputStream resource = GM.class.getResourceAsStream("/logging.properties")) {
       if (resource != null) {
         LogManager.getLogManager().readConfiguration(resource);
@@ -90,7 +92,7 @@ public class GM {
     });
   }
 
-  public static Tower.State getState() {
+  public static State getState() {
     return state;
   }
 
@@ -98,7 +100,7 @@ public class GM {
     Input.mouse().setGrabMouse(false);
     Input.keyboard().onKeyReleased(KeyEvent.VK_SPACE, e -> startGame());
     Function<Runnable, Consumer<KeyEvent>> ke = r ->
-        e -> { if (state == Tower.State.INGAME && !tower().isDead()) r.run(); };
+        e -> { if (state == State.INGAME && !tower().isDead()) r.run(); };
     Input.keyboard().onKeyReleased(KeyEvent.VK_F1,
                                    ke.apply(() -> towerEntity.consumeRecovery()));
     Input.keyboard().onKeyReleased(KeyEvent.VK_F2,
@@ -108,13 +110,13 @@ public class GM {
   }
 
   private static void startGame() {
-    if (state == Tower.State.INGAME) return;
+    if (state == State.INGAME) return;
     Game.window().getRenderComponent().fadeOut(500);
-    if (state == Tower.State.GAMEOVER) {
+    if (state == State.GAMEOVER) {
       terminating = true;
       return;
     }
-    state = Tower.State.INGAME;
+    state = State.INGAME;
     gameStartTick = Game.time().now();
     enemyCount = 0;
     towerEntity = new TowerEntity(tower);
@@ -128,7 +130,7 @@ public class GM {
   private static boolean spawnTick = false;
 
   public static void update() {
-    if (state != Tower.State.INGAME) return;
+    if (state != State.INGAME) return;
     if (timing()) {
       if (!towerEntity.isDead() && spawnTick) {
         Optional.ofNullable(towerEntity.getSoldierEntity())
@@ -142,7 +144,7 @@ public class GM {
     }
     if (towerEntity.isDead()
         || enemyCount >= MAX_ENEMY_COUNT && Game.world().environment().getCombatEntities().size() == 1) {
-      state = Tower.State.GAMEOVER;
+      state = State.GAMEOVER;
     }
   }
 
@@ -156,10 +158,6 @@ public class GM {
 
   public static String enemyCount() {
     return String.valueOf(enemyCount + "/" + MAX_ENEMY_COUNT);
-  }
-
-  public static int getEnemyCount() {
-    return enemyCount;
   }
 
   public static Pair<Boolean, Integer> abilityRecover() {

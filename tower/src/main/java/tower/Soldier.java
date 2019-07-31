@@ -28,22 +28,4 @@ public class Soldier {
     speed = DEFAULT_SPEED * 2;
     power = DEFAULT_POWER / 2;
   }
-
-  public final boolean dispatched() { return entity != null;}
-
-  public final String getName() {
-    return dispatched() ? entity.getName() : "未定義";
-  }
-
-  public final int getLife() {
-    return dispatched() ? entity.getHitPoints().getCurrentValue() : -1;
-  }
-
-  public final int getMaxLife() {
-    return dispatched() ? entity.getHitPoints().getMaxValue() : -1;
-  }
-
-  public final Boolean isDead() {
-    return dispatched() ? entity.isDead() : null;
-  }
 }
