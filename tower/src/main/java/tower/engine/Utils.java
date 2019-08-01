@@ -13,6 +13,7 @@ public class Utils {
   private static final Logger log = Logger.getLogger(Utils.class.getName());
 
   public static void spawn(String name, Creature entity) {
+    if (entity.isDead()) return;
     Spawnpoint point = Game.world().environment().getSpawnpoint(name);
     point.spawn(entity);
     entity.setX(entity.getX() - (entity.getWidth() - point.getWidth()) / 2);

@@ -82,10 +82,10 @@ public class GM {
       gameStartTick = Game.time().now();
       enemyCount = 0;
       towerEntity = new TowerEntity(tower);
-      Utils.spawn("tower", towerEntity);
       Game.loop().perform(600, () -> {
         Game.screens().display("main");
         Game.window().getRenderComponent().fadeIn(500);
+        Utils.spawn("tower", towerEntity);
       });
     });
 
@@ -111,10 +111,10 @@ public class GM {
       gameStartTick = Game.time().now();
       enemyCount = 0;
       towerEntity = new TowerEntity(tower.get());
-      Utils.spawn("tower", towerEntity);
       Game.loop().perform(600, () -> {
         Game.screens().display("main");
         Game.window().getRenderComponent().fadeIn(500);
+        Utils.spawn("tower", towerEntity);
       });
     });
 
@@ -167,18 +167,17 @@ public class GM {
   private static boolean spawnTick = false;
 
   public static void update() {
-    if (state != State.INGAME) return;
-    if (timing()) {
-      if (!towerEntity.isDead() && spawnTick) {
-        Optional.ofNullable(towerEntity.getSoldierEntity())
-                .ifPresent(e -> Utils.spawn("respawn", e));
-      }
-      if (enemyCount < MAX_ENEMY_COUNT) {
-        Utils.spawn("spawn", new EnemyEntity());
-        enemyCount++;
-      }
-      spawnTick = !spawnTick;
+    if (state != State.INGAME || !timing()) return;
+
+    if (!towerEntity.isDead() && spawnTick) {
+      Optional.ofNullable(towerEntity.getSoldierEntity())
+              .ifPresent(e -> Utils.spawn("respawn", e));
     }
+    if (enemyCount < MAX_ENEMY_COUNT) {
+      Utils.spawn("spawn", new EnemyEntity());
+      enemyCount++;
+    }
+    spawnTick = !spawnTick;
     if (towerEntity.isDead()
         || enemyCount >= MAX_ENEMY_COUNT && Game.world().environment().getCombatEntities().size() == 1) {
       state = State.GAMEOVER;
