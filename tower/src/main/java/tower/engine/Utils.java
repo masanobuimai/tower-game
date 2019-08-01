@@ -3,10 +3,9 @@ package tower.engine;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.entities.Creature;
 import de.gurkenlabs.litiengine.entities.Spawnpoint;
+import de.gurkenlabs.litiengine.resources.Resources;
 
 import java.awt.*;
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 public class Utils {
@@ -28,28 +27,12 @@ public class Utils {
         .forEach(c -> Game.world().environment().remove(entity));
   }
 
-  private static final HashMap<String, Font> fonts = new HashMap();
-
   public static Font fontNormal() {
-    return getFont("PICO-8.ttf", 8.0f);
+    return Resources.fonts().get("PICO-8.ttf", 8.0f);
   }
 
   public static Font fontLarge() {
-    return getFont("PICO-8.ttf", 16.0f);
-  }
-
-  private static Font getFont(String fontName, float fontSize) {
-    if (fonts.containsKey(fontName)) {
-      return fonts.get(fontName).deriveFont(fontSize);
-    }
-    try (InputStream fontStream = ClassLoader.getSystemResourceAsStream(fontName)) {
-      Font font = Font.createFont(0, fontStream);
-      GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
-      fonts.put(fontName, font);
-      return font.deriveFont(fontSize);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    return Resources.fonts().get("PICO-8.ttf", 16.0f);
   }
 
   public static double screenHeight() {
