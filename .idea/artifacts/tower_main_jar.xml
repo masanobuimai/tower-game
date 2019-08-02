@@ -2,7 +2,6 @@
   <artifact type="jar" build-on-make="true" name="tower.main:jar">
     <output-path>$PROJECT_DIR$/tutorial/lib</output-path>
     <root id="archive" name="tower.jar">
-      <element id="module-output" name="tower.main" />
       <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.googlecode.soundlibs/tritonus-share/0.3.7.4/bdddc55194f9cf7b970dd5f3affcbacb88342b0b/tritonus-share-0.3.7.4.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.googlecode.soundlibs/jlayer/1.0.1.4/b8df07ad72b482f7d6e6dee7fed669385e8dd92f/jlayer-1.0.1.4.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.activation/javax.activation-api/1.2.0/85262acf3ca9816f9537ca47d5adeabaead7cb16/javax.activation-api-1.2.0.jar" path-in-jar="/" />
@@ -19,6 +18,7 @@
       <element id="dir-copy" path="$PROJECT_DIR$/tower/maps" />
       <element id="dir-copy" path="$PROJECT_DIR$/tower/misc" />
       <element id="dir-copy" path="$PROJECT_DIR$/tower/sprites" />
+      <element id="module-output" name="tower-game.tower.main" />
     </root>
   </artifact>
 </component>

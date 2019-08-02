@@ -7,6 +7,7 @@ import java.util.List;
  * ここから兵士を派兵します。
  */
 public abstract class Tower {
+
   /** 派兵できる兵士の最大数 */
   public static final int MAX_SOLDIER_COUNT = 40;
 

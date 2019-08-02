@@ -13,18 +13,8 @@ public final class BasicTower extends Tower {
   /** 簡単なタワーの最大耐久力 */
   public static int MAX_LIFE_UPPER = 2_000;
 
-  private String name = "bunker";
   private int maxLife = 1_000;
   private Soldier soldier;
-
-  /**
-   * タワーの名前を設定します。
-   * @param name の名前
-   */
-  public void setName(String name) {
-    // TODO タワーの見た目を2～3種類用意しよう
-    this.name = name;
-  }
 
   /**
    * タワーの耐久力を設定します。

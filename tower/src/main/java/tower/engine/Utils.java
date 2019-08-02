@@ -28,7 +28,7 @@ public class Utils {
   }
 
   public static Font fontNormal() {
-    return Resources.fonts().get("PICO-8.ttf", 8.0f);
+    return Resources.fonts().get("PICO-8.ttf", 10.0f);
   }
 
   public static Font fontLarge() {

@@ -2,6 +2,7 @@ package tower;
 
 import tower.engine.GM;
 
+import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
 /**
@@ -16,10 +17,14 @@ public class TowerGame {
    * とりあえずゲームを開始します（タワーはありません）。
    */
   public static void start() {
-    BasicTower tower = new BasicTower();
-    tower.setName("");
-    tower.setMaxLife(1);
-    GM.start(tower);
+    try {
+      // エグい方法でライフ0のタワーを作る
+      BasicTower tower = new BasicTower();
+      Field field = BasicTower.class.getDeclaredField("maxLife");
+      field.setAccessible(true);
+      field.set(tower, 0);
+      GM.start(tower);
+    } catch (Exception ignore) {}
   }
 
   /**

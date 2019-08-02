@@ -59,7 +59,7 @@ public class GM {
     Resources.load(resource);
 
     Game.init(args);
-    Game.graphics().setBaseRenderScale(1.0f);
+    Game.graphics().setBaseRenderScale(2.0f);
 
     Game.screens().add(new MainScreen());
     Game.screens().add(new TitleScreen());

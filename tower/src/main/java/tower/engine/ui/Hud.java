@@ -52,20 +52,20 @@ public class Hud extends GuiComponent {
   private void renderHealthBar(Graphics2D g) {
     double healthBarMaxWidth = Utils.screenWidth() * 0.3;
     double healthBarHeight = Utils.screenHeight() * 0.05;
-    double healthBarX = (Utils.screenWidth() - healthBarMaxWidth) / 2.0D;
-    double healthBarY = Utils.screenHeight() * 0.85;
+    double healthBarX = (Utils.screenWidth() - healthBarMaxWidth) / 2;
+    double healthBarY = Utils.screenHeight() * 0.82;
     int hp = GM.tower().getHitPoints().getCurrentValue();
     int maxHp = GM.tower().getHitPoints().getMaxValue();
     double currentHealthRatio = hp * 1.0 / maxHp;
     String healthRatioText = String.valueOf(hp);
-    Rectangle2D healthShadowRect = new Rectangle2D.Double(healthBarX - 2.0D, healthBarY - 2.0D,
-                                                          healthBarMaxWidth + 4.0D, healthBarHeight + 4.0D);
+    Rectangle2D healthShadowRect = new Rectangle2D.Double(healthBarX - 2, healthBarY - 2,
+                                                          healthBarMaxWidth + 4, healthBarHeight + 4);
     Rectangle2D healthRect = new Rectangle2D.Double(healthBarX, healthBarY,
                                                     currentHealthRatio * healthBarMaxWidth, healthBarHeight);
     g.setFont(Utils.fontLarge());
     FontMetrics fm = g.getFontMetrics();
-    double healthTextX = healthBarX + healthBarMaxWidth / 2.0D - (double) fm.stringWidth(healthRatioText) / 2.0D;
-    double healthTextY = healthBarY + (double) fm.getAscent() + (healthBarHeight - (double) (fm.getAscent() + fm.getDescent())) / 2.0D;
+    double healthTextX = healthBarX + healthBarMaxWidth / 2 - (double) fm.stringWidth(healthRatioText) / 2;
+    double healthTextY = healthBarY + (double) fm.getAscent() + (healthBarHeight - (double) (fm.getAscent() + fm.getDescent())) / 2;
 
     g.setColor(shadowColor);
     g.fill(healthShadowRect);
@@ -79,7 +79,7 @@ public class Hud extends GuiComponent {
     double abilityCellWidth = Utils.screenWidth() * 0.03;
     double abilityMargin = Utils.screenWidth() * 0.015;
     double abilityHeight = abilityCellWidth;
-    double abilityX = (Utils.screenWidth() / 2.0) - (abilityCellWidth * 1.5) - (abilityMargin);
+    double abilityX = (Utils.screenWidth() / 2) - (abilityCellWidth * 1.5) - (abilityMargin);
     double abilityY = Utils.screenHeight() * 0.05;
 
     for (int i = 0; i < ABILITIES.length; i++) {
@@ -113,11 +113,11 @@ public class Hud extends GuiComponent {
 
     double countY = Utils.screenHeight() * 0.85;
     String countText = GM.soldierCount();
-    double countX = Utils.screenWidth() * 0.05 - (double) fm.stringWidth(countText) / 2.0D;
+    double countX = Utils.screenWidth() * 0.05 - (double) fm.stringWidth(countText) / 2;
     TextRenderer.renderWithOutline(g, countText, countX, countY, Color.BLACK);
 
     String enemyCountText = GM.enemyCount();
-    double enemyCountX = Utils.screenWidth() * 0.95 - (double) fm.stringWidth(enemyCountText) / 2.0D;
+    double enemyCountX = Utils.screenWidth() * 0.95 - (double) fm.stringWidth(enemyCountText) / 2;
     TextRenderer.renderWithOutline(g, enemyCountText, enemyCountX, countY, Color.BLACK);
   }
 }

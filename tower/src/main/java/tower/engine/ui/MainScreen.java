@@ -33,23 +33,25 @@ public class MainScreen extends GameScreen implements IUpdateable {
 
   @Override
   public void render(Graphics2D g) {
-    super.render(g);
-    if (GM.getState() == GM.State.GAMEOVER) {
-      // タワーだけになったらゲームオーバー
-      g.setColor(Color.WHITE);
-      g.setFont(Utils.fontNormal());
-      TextRenderer.renderWithOutline(g, "esc key -> exit", 10, 10, Color.BLACK);
-      g.setFont(Utils.fontLarge());
-      TextRenderer.renderWithOutline(g, "game over:" + (GM.tower().isDead() ? "loose" : "win!!"),
-                                     Utils.screenWidth() * 0.3,
-                                     Utils.screenHeight() * 0.3,
-                                     Color.BLACK);
-      FontMetrics fm = g.getFontMetrics();
-      TextRenderer.renderWithOutline(g, "score :" + GM.tower().score(),
-                                     Utils.screenWidth() * 0.3,
-                                     Utils.screenHeight() * 0.3 + fm.getHeight() * 1.5,
-                                     Color.BLACK);
-    }
+    try {
+      super.render(g);
+      if (GM.getState() == GM.State.GAMEOVER) {
+        // タワーだけになったらゲームオーバー
+        g.setColor(Color.WHITE);
+        g.setFont(Utils.fontNormal());
+        TextRenderer.renderWithOutline(g, "esc key -> exit", 10, 15, Color.BLACK);
+        g.setFont(Utils.fontLarge());
+        TextRenderer.renderWithOutline(g, "game over:" + (GM.tower().isDead() ? "lost..." : "won!!"),
+                                       Utils.screenWidth() * 0.3,
+                                       Utils.screenHeight() * 0.3,
+                                       Color.BLACK);
+        FontMetrics fm = g.getFontMetrics();
+        TextRenderer.renderWithOutline(g, "score:" + GM.tower().score(),
+                                       Utils.screenWidth() * 0.3,
+                                       Utils.screenHeight() * 0.3 + fm.getHeight() * 1.5,
+                                       Color.BLACK);
+      }
+    } catch (Exception ignore) {}
   }
 
   public void renderLifeBar(MobEntity e, Graphics2D g) {
