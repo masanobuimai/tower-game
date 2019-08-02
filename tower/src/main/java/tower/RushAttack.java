@@ -15,13 +15,22 @@ public interface RushAttack {
 
   /** 敵 */
   interface Enemy {
-    /** 体力 */
+    /**
+     * 体力
+     * @return 体力
+     */
     int getHp();
 
-    /** 体力（％） */
+    /**
+     * 体力（％）
+     * @return 体力（％）
+     */
     double getHpRatio();
 
-    /** タワーとの距離（％） */
+    /**
+     * タワーとの距離（％）
+     * @return タワーとの距離（％）
+     */
     double getDestRatio();
   }
 }
