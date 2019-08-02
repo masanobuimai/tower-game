@@ -2,6 +2,7 @@ package tower.engine.entity;
 
 import tower.Soldier;
 
+import java.lang.reflect.Field;
 import java.util.logging.Logger;
 
 public class SoldierEntity extends MobEntity {
@@ -14,6 +15,12 @@ public class SoldierEntity extends MobEntity {
     this.soldier = soldier;
     getHitPoints().setBaseValue(soldier.life());
     damage = soldier.power();
-    addHitListener(e -> soldier.hit((int) e.getDamage()));
+    try {
+      Field field = Soldier.class.getDeclaredField("entity");
+      field.setAccessible(true);
+      field.set(soldier, this);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

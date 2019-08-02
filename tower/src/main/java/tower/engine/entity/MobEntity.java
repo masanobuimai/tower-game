@@ -40,22 +40,24 @@ public abstract class MobEntity extends Creature implements IUpdateable {
     charge = new Charge(this);
 
     setTeam(team);
-    addHitListener(e -> {
-      Game.world().environment().add(new FloatingTextEmitter(String.valueOf((int) e.getDamage()),
-                                                             e.getEntity().getCenter(), Color.WHITE));
-      IAnimationController controller = e.getEntity().getAnimationController();
-      controller.add(new OverlayPixelsImageEffect(50, Color.WHITE));
-      Game.loop().perform(50, () -> controller.add(new OverlayPixelsImageEffect(50, Color.RED)));
-      if (e.getAbility() != null && e.getAbility().getExecutor() instanceof StrikerEntity) {
-        Emitter emitter = new FireEmitter((int) getX(), (int) getY());
-        emitter.setHeight(getHeight());
-        emitter.setTimeToLive(1500);
-        Game.world().environment().add(emitter);
-      }
-    });
-    addDeathListener(e -> {
-      Game.world().environment().remove(e);
-    });
+    if (!Game.isInNoGUIMode()) {
+      addHitListener(e -> {
+        Game.world().environment().add(new FloatingTextEmitter(String.valueOf((int) e.getDamage()),
+                                                               e.getEntity().getCenter(), Color.WHITE));
+        IAnimationController controller = e.getEntity().getAnimationController();
+        controller.add(new OverlayPixelsImageEffect(50, Color.WHITE));
+        Game.loop().perform(50, () -> controller.add(new OverlayPixelsImageEffect(50, Color.RED)));
+        if (e.getAbility() != null && e.getAbility().getExecutor() instanceof StrikerEntity) {
+          Emitter emitter = new FireEmitter((int) getX(), (int) getY());
+          emitter.setHeight(getHeight());
+          emitter.setTimeToLive(1500);
+          Game.world().environment().add(emitter);
+        }
+      });
+      addDeathListener(e -> {
+        Game.world().environment().remove(e);
+      });
+    }
   }
 
   public boolean isEngage(Creature enemy) {

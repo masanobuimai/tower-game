@@ -47,7 +47,7 @@ public class GM {
     return towerEntity;
   }
 
-  private static void init() {
+  private static void init(String... args) {
     state = State.READY;
     try (InputStream resource = GM.class.getResourceAsStream("/logging.properties")) {
       if (resource != null) {
@@ -58,23 +58,25 @@ public class GM {
     URL resource = GM.class.getClassLoader().getResource("game.litidata");
     Resources.load(resource);
 
-    Game.init();
+    Game.init(args);
     Game.graphics().setBaseRenderScale(1.0f);
 
     Game.screens().add(new MainScreen());
     Game.screens().add(new TitleScreen());
 
-    Game.screens().display("title");
-    Camera cam = new Camera();
-    cam.setFocus(Game.world().environment().getCenter());
-    Game.world().setCamera(cam);
+    if (!Game.isInNoGUIMode()) {
+      Game.screens().display("title");
+      Camera cam = new Camera();
+      cam.setFocus(Game.world().environment().getCenter());
+      Game.world().setCamera(cam);
+    }
   }
 
-  public static void start(Tower tower) {
+  public static void start(Tower tower, String... args) {
     if (tower == null) {
       throw new NullPointerException("null入れてくんな。");
     }
-    init();
+    init(args);
     initInputDevice(() -> {
       if (state != State.READY) return;
       Game.window().getRenderComponent().fadeOut(500);
@@ -90,14 +92,14 @@ public class GM {
     });
 
     Game.start();
-    running();
+    if (!Game.isInNoGUIMode()) running();
   }
 
-  public static void start(Supplier<Tower> tower) {
+  public static void start(Supplier<Tower> tower, String... args) {
     if (tower == null) {
       throw new NullPointerException("null入れてくんな。");
     }
-    init();
+    init(args);
     initInputDevice(() -> {
       if (state == State.INGAME) return;
       state = State.INGAME;
@@ -119,7 +121,7 @@ public class GM {
     });
 
     Game.start();
-    running();
+    if (!Game.isInNoGUIMode()) running();
   }
 
   public static void running() {

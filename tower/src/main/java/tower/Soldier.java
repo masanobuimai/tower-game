@@ -14,17 +14,26 @@ public class Soldier {
   /** 攻撃力のデフォルト値 */
   public static final int DEFAULT_POWER = 20;
 
+  private static int count = 1;
+
+  private String name;
   private int life = DEFAULT_LIFE;
   private int speed = DEFAULT_SPEED;
   private int power = DEFAULT_POWER;
 
   private SoldierEntity entity;
 
+  public Soldier() {
+    name = "兵士#" + (count++);
+  }
+
   /**
    * 体力を取得します。
    * @return 体力
    */
-  public final int life() { return life;}
+  public final int life() {
+    return entity != null ? entity.getHitPoints().getCurrentValue() : life;
+  }
 
   /**
    * 歩く速さを取得します。
@@ -61,12 +70,16 @@ public class Soldier {
   }
 
   /**
-   * 攻撃を受ける
-   * @param damage ダメージ
+   * 死んじゃったかどうかを確認します。
+   * @return 体力が0だと死亡
    */
-  public final void hit(int damage) {
-    life -= damage;
-    life = life < 0 ? 0 : life;
+  public final boolean isDead() {
+    return life() <= 0;
   }
 
+  @Override
+  public String toString() {
+    return String.format("%s(速さ:%d/攻撃力:%d) - ", name, speed, power)
+           + (entity == null ? "待機中" : "出兵済み" + (isDead() ? "[死亡]" : "[生還！]"));
+  }
 }
