@@ -15,7 +15,6 @@ public class Program05 {
     TowerGame.start(MyTower::new);
   }
 
-
   // タワーを使い回すと，兵士は死んだまま
   private static BasicTower tower;
 

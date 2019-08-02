@@ -18,20 +18,25 @@ import java.util.stream.IntStream;
 // EarthShakeインターフェイスを実装すると，地面が揺れる
 // RushAttackインターフェイスを実装すると，突進攻撃ができる
 public class MyTower extends Tower implements Recovery, EarthShake, RushAttack {
+  private List<Soldier> list;
+
+  public MyTower() {
+    list = IntStream.range(0, MAX_SOLDIER_COUNT)
+                    .mapToObj(i -> {
+                      Soldier soldier = new Soldier();
+                      if (i % 3 == 1) {
+                        soldier.powerType();
+                      } else if (i % 3 == 2) {
+                        soldier.speedType();
+                      }
+                      return soldier;
+                    })
+                    .collect(Collectors.toList());
+    Collections.shuffle(list);
+  }
+
   @Override
   public List<Soldier> getSoldierList() {
-    List<Soldier> list = IntStream.range(0, MAX_SOLDIER_COUNT)
-                                  .mapToObj(i -> {
-                                    Soldier soldier = new Soldier();
-                                    if (i % 3 == 1) {
-                                      soldier.powerType();
-                                    } else if (i % 3 == 2) {
-                                      soldier.speedType();
-                                    }
-                                    return soldier;
-                                  })
-                                  .collect(Collectors.toList());
-    Collections.shuffle(list);
     return list;
   }
 

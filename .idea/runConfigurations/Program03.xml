@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Program031" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="tutorial.step3.Program031" />
+  <configuration default="false" name="Program03" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="tutorial.step3.Program03" />
     <module name="tutorial" />
     <extension name="chronon">
       <include>
