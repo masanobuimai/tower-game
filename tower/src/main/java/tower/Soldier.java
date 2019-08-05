@@ -2,6 +2,8 @@ package tower;
 
 import tower.engine.entity.SoldierEntity;
 
+import java.util.function.Supplier;
+
 /**
  * 兵士。
  * 属性に体力（life），歩く速さ（speed），攻撃力（power）を持ちます。
@@ -16,22 +18,71 @@ public class Soldier {
 
   private static int count = 1;
 
+  /** 体力ボーナス */
+  public enum LIFE_BONUS {
+    /** 体力25%減，それ以外50%アップ */
+    Rate75(0.75, 1.5),
+    /** ボーナスなし */
+    Rate100(1.0, 1.0),
+    /** 体力50アップ，それ以外25%減 */
+    Rate150(1.5, 0.75);
+
+    private double lifeRate, paramRate;
+
+    LIFE_BONUS(double l, double p) {
+      this.lifeRate = l;
+      this.paramRate = p;
+    }
+
+    int life(int v) { return (int) (v * lifeRate); }
+
+    int param(int v) { return (int) (v * paramRate); }
+  }
+
+  private LIFE_BONUS bonus;
   private String name;
-  private int life = DEFAULT_LIFE;
-  private int speed = DEFAULT_SPEED;
-  private int power = DEFAULT_POWER;
+  private int life, speed, power;
+
+  private Supplier<Integer> defaultLife = () -> bonus.life(DEFAULT_LIFE);
+  private Supplier<Integer> defaultSpeed = () -> bonus.param(DEFAULT_SPEED);
+  private Supplier<Integer> defaultPower = () -> bonus.param(DEFAULT_POWER);
 
   private SoldierEntity entity;
 
+  /** 体力100，歩く速さ60，攻撃力20の兵士を作る。 */
   public Soldier() {
-    name = "兵士#" + (count++);
+    this(LIFE_BONUS.Rate100);
+  }
+
+  /**
+   * 体力ボーナスを付与した兵士を作る。
+   * <table>
+   *   <caption>_</caption>
+   *   <tr>
+   *     <th>体力ボーナス</th><th>体力</th><th>歩く速さ</th><th>攻撃力</th>Q
+   *   </tr>
+   *   <tr>
+   *     <td>@{link {@link LIFE_BONUS#Rate75}}</td><td>75</td><td>90</td><td>30</td>
+   *     <td>@{link {@link LIFE_BONUS#Rate100}}</td><td>100</td><td>60</td><td>20</td>
+   *     <td>@{link {@link LIFE_BONUS#Rate150}}</td><td>150</td><td>45</td><td>15</td>
+   *   </tr>
+   *
+   * </table>
+   * @param bonus 体力ボーナス
+   */
+  public Soldier(LIFE_BONUS bonus) {
+    this.name = "兵士#" + (count++);
+    this.bonus = bonus;
+    this.life = defaultLife.get();
+    this.speed = defaultSpeed.get();
+    this.power = defaultPower.get();
   }
 
   /**
    * 体力を取得します。
    * @return 体力
    */
-  public final int life() {
+  public final int getLife() {
     return entity != null ? entity.getHitPoints().getCurrentValue() : life;
   }
 
@@ -39,34 +90,30 @@ public class Soldier {
    * 歩く速さを取得します。
    * @return 歩く速さ
    */
-  public final int speed() { return speed;}
+  public final int getSpeed() { return speed;}
 
   /**
    * 攻撃力を取得します。
    * @return 攻撃力
    */
-  public final int power() { return power;}
+  public final int getPower() { return power;}
 
-  /** 標準的な兵士にします。 */
-  public final void standard() {
-    speed = DEFAULT_SPEED;
-    power = DEFAULT_POWER;
+  /** パラメタ（歩く速さと攻撃力）をリセットします。 */
+  public final void reset() {
+    speed = defaultSpeed.get();
+    power = defaultPower.get();
   }
 
-  /**
-   * パワータイプ（速さ半減，攻撃力２倍）の兵士にします。
-   */
-  public final void powerType() {
-    speed = DEFAULT_SPEED / 2;
-    power = DEFAULT_POWER * 2;
+  /** パワーアップする（速さ半減，攻撃力２倍）。 */
+  public final void powerUp() {
+    speed = defaultSpeed.get() / 2;
+    power = defaultPower.get() * 2;
   }
 
-  /**
-   * スピードタイプ（速さ２倍，攻撃力半減）の兵士にします。
-   */
-  public final void speedType() {
-    speed = DEFAULT_SPEED * 2;
-    power = DEFAULT_POWER / 2;
+  /** スピードアップする（速さ２倍，攻撃力半減）。 */
+  public final void speedUp() {
+    speed = defaultSpeed.get() * 2;
+    power = defaultPower.get() / 2;
   }
 
   /**
@@ -74,7 +121,7 @@ public class Soldier {
    * @return 体力が0だと死亡
    */
   public final boolean isDead() {
-    return life() <= 0;
+    return getLife() <= 0;
   }
 
   @Override

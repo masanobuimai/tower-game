@@ -16,9 +16,9 @@ public class MyTowerEx extends Tower implements CheckedEarthShake {
                     .mapToObj(i -> {
                       Soldier soldier = new Soldier();
                       if (i % 3 == 1) {
-                        soldier.powerType();
+                        soldier.powerUp();
                       } else if (i % 3 == 2) {
-                        soldier.speedType();
+                        soldier.speedUp();
                       }
                       return soldier;
                     })

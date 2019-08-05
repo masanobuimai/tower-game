@@ -4,6 +4,6 @@ import tower.Soldier;
 
 public class SpeedSoldier extends Soldier {
   public SpeedSoldier() {
-    speedType();
+    speedUp();
   }
 }

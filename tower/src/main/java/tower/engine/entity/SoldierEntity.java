@@ -11,10 +11,10 @@ public class SoldierEntity extends MobEntity {
   private Soldier soldier;
 
   public SoldierEntity(Soldier soldier) {
-    super("Dean", LEFT_SIDE, soldier.speed());
+    super("Dean", LEFT_SIDE, soldier.getSpeed());
     this.soldier = soldier;
-    getHitPoints().setBaseValue(soldier.life());
-    damage = soldier.power();
+    getHitPoints().setBaseValue(soldier.getLife());
+    damage = soldier.getPower();
     try {
       Field field = Soldier.class.getDeclaredField("entity");
       field.setAccessible(true);

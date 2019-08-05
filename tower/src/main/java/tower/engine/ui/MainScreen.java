@@ -41,7 +41,7 @@ public class MainScreen extends GameScreen implements IUpdateable {
         g.setFont(Utils.fontNormal());
         TextRenderer.renderWithOutline(g, "esc key -> exit", 10, 15, Color.BLACK);
         g.setFont(Utils.fontLarge());
-        TextRenderer.renderWithOutline(g, "game over:" + (GM.tower().isDead() ? "lost..." : "won!!"),
+        TextRenderer.renderWithOutline(g, "game over:" + (GM.tower().isDead() ? "lose..." : "win!!"),
                                        Utils.screenWidth() * 0.3,
                                        Utils.screenHeight() * 0.3,
                                        Color.BLACK);
@@ -59,11 +59,11 @@ public class MainScreen extends GameScreen implements IUpdateable {
       double hpRatio = e.getHitPoints().getCurrentValue().doubleValue() / e.getHitPoints().getMaxValue().doubleValue();
       double healthBarMaxWidth = e.getWidth();
       double healthBarWidth = healthBarMaxWidth * hpRatio;
-      double healthBarHeight = 2.0D;
+      double healthBarHeight = 2.0;
       double x = Game.world().camera()
-                     .getViewportDimensionCenter(e).getX() - healthBarWidth / 2.0D;
+                     .getViewportDimensionCenter(e).getX() - healthBarWidth / 2.0;
       double y = Game.world().camera()
-                     .getViewportDimensionCenter(e).getY() - (e.getHeight() * 3.0F / 4.0F);
+                     .getViewportDimensionCenter(e).getY() - (e.getHeight() * 3.0 / 4.0);
       Point2D healthBarOrigin = new Point2D.Double(x, y);
       Rectangle2D rect = new Rectangle2D.Double(healthBarOrigin.getX(), healthBarOrigin.getY(), healthBarWidth, healthBarHeight);
       g.setColor(Color.BLACK);

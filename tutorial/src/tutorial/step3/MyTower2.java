@@ -15,9 +15,9 @@ public class MyTower2 extends Tower {
     for (int i = 0; i < MAX_SOLDIER_COUNT; i++) {
       Soldier soldier = new Soldier();
       if (i % 3 == 1) {
-        soldier.powerType();
+        soldier.powerUp();
       } else if (i % 3 == 2) {
-        soldier.speedType();
+        soldier.speedUp();
       }
       list.add(soldier);
     }

@@ -13,9 +13,7 @@ import java.util.function.Supplier;
  * </ul>
  */
 public class TowerGame {
-  /**
-   * とりあえずゲームを開始します（タワーはありません）。
-   */
+  /** とりあえずゲームを開始します（タワーはありません）。 */
   public static void start() {
     try {
       // エグい方法でライフ0のタワーを作る
@@ -37,8 +35,8 @@ public class TowerGame {
 
   /**
    * ゲームを開始します。
-   * ゲームオーバーになっても，スペースキーを押すと
-   * 新しいタワーを使ってゲームを再開します。
+   * ゲームオーバー画面で，スペースキーを押すと新しいタワーを
+   * 使ってゲームを再開します（ESCキーでゲームを終了します）。
    * @param towerSupplier タワーの供給手段
    */
   public static void start(Supplier<Tower> towerSupplier) {

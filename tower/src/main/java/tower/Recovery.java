@@ -11,9 +11,9 @@ public interface Recovery {
    * 回復対象を指定します。
    * Mapの値に true を設定した対象が回復対象になります。
    * <ul>
-   *   <li>@{link {@link Type#TOWER}} - タワーの耐久力を回復します</li>
-   *   <li>@{link {@link Type#SOLDERS} - ステージにいる全兵士の体力を回復します</li>
-   *   <li>@{link {@link Type#ENEMIES} - ステージにいるすべての敵の体力を削ります</li>
+   *   <li>@{link {@link Type#TOWER}} - タワーの耐久力を回復します（最大で初期値まで回復する）</li>
+   *   <li>@{link {@link Type#SOLDERS} - ステージにいる全兵士の体力を回復します（最大で初期値まで回復する）</li>
+   *   <li>@{link {@link Type#ENEMIES} - ステージにいるすべての敵の体力を削ります（最大で今の体力の半分まで減らす）</li>
    * </ul>
    * 回復対象の指定が多いほど，その効果が弱まります。
    * @return 回復対象

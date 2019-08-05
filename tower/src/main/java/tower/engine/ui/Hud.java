@@ -8,15 +8,11 @@ import tower.engine.GM;
 import tower.engine.Utils;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.function.Supplier;
 
 public class Hud extends GuiComponent {
-  public static Color hudRedColor = new Color(188, 12, 12);
-  public static Color shadowColor = new Color(48, 48, 48, 200);
-  public static Color textColor = new Color(255, 255, 255);
 
   public Hud(double x, double y) {
     super(x, y);
@@ -67,11 +63,11 @@ public class Hud extends GuiComponent {
     double healthTextX = healthBarX + healthBarMaxWidth / 2 - (double) fm.stringWidth(healthRatioText) / 2;
     double healthTextY = healthBarY + (double) fm.getAscent() + (healthBarHeight - (double) (fm.getAscent() + fm.getDescent())) / 2;
 
-    g.setColor(shadowColor);
+    g.setColor(Color.DARK_GRAY);
     g.fill(healthShadowRect);
-    g.setColor(hudRedColor);
+    g.setColor(Color.RED);
     g.fill(healthRect);
-    g.setColor(textColor);
+    g.setColor(Color.WHITE);
     TextRenderer.renderWithOutline(g, healthRatioText, healthTextX, healthTextY, Color.BLACK);
   }
 
@@ -85,23 +81,24 @@ public class Hud extends GuiComponent {
     for (int i = 0; i < ABILITIES.length; i++) {
       Rectangle2D shadowRect = new Rectangle2D.Double(abilityX + (abilityCellWidth + abilityMargin) * i,
                                                       abilityY, abilityCellWidth, abilityHeight);
-      g.setColor(shadowColor);
+      g.setColor(Color.DARK_GRAY);
       g.fill(shadowRect);
 
       g.setFont(Utils.fontNormal());
       FontMetrics fm = g.getFontMetrics();
-      g.setColor(textColor);
+      g.setColor(Color.WHITE);
       TextRenderer.renderWithOutline(g, "f" + (i + 1), shadowRect.getX(),
                                      shadowRect.getY() + fm.getHeight(), Color.BLACK);
 
       if (ABILITIES[i].available.get() && ABILITIES[i].count.get() > 0) {
         BufferedImage image = Resources.spritesheets().get(ABILITIES[i].name).getImage();
-        double x = abilityX + (abilityCellWidth + abilityMargin) * i + abilityCellWidth * 0.5 - image.getWidth() / 2;
-        double y = abilityY + abilityHeight * 0.5 - image.getHeight() / 2;
-        ImageRenderer.render(g, image, new Point2D.Double(x, y));
+        ImageRenderer.render(g, image, shadowRect.getCenterX() - image.getWidth() / 2,
+                             shadowRect.getCenterY() - image.getHeight() / 2);
 
-        g.setColor(textColor);
-        TextRenderer.renderWithOutline(g, String.valueOf(ABILITIES[i].count.get()), x, y * 2, Color.BLACK);
+        String countLabel = String.valueOf(ABILITIES[i].count.get());
+        TextRenderer.renderWithOutline(g, countLabel,
+                                       shadowRect.getMaxX() - fm.stringWidth(countLabel),
+                                       shadowRect.getMaxY(), Color.BLACK);
       }
     }
   }
@@ -109,7 +106,7 @@ public class Hud extends GuiComponent {
   private void renderCount(Graphics2D g) {
     g.setFont(Utils.fontLarge());
     FontMetrics fm = g.getFontMetrics();
-    g.setColor(textColor);
+    g.setColor(Color.WHITE);
 
     double countY = Utils.screenHeight() * 0.85;
     String countText = GM.soldierCount();

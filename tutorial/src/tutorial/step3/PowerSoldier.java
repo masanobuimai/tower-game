@@ -4,6 +4,6 @@ import tower.Soldier;
 
 public class PowerSoldier extends Soldier {
   public PowerSoldier() {
-    powerType();
+    powerUp();
   }
 }

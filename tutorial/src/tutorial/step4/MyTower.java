@@ -25,9 +25,9 @@ public class MyTower extends Tower implements Recovery, EarthShake, RushAttack {
                     .mapToObj(i -> {
                       Soldier soldier = new Soldier();
                       if (i % 3 == 1) {
-                        soldier.powerType();
+                        soldier.powerUp();
                       } else if (i % 3 == 2) {
-                        soldier.speedType();
+                        soldier.speedUp();
                       }
                       return soldier;
                     })
