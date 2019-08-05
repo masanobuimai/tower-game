@@ -2,8 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="tower-game.tower.main" target="1.8" />
-      <module name="tower-game.tower.test" target="1.8" />
       <module name="tower.main" target="1.8" />
       <module name="tower.test" target="1.8" />
     </bytecodeTargetLevel>

@@ -18,7 +18,7 @@
       <element id="dir-copy" path="$PROJECT_DIR$/tower/maps" />
       <element id="dir-copy" path="$PROJECT_DIR$/tower/misc" />
       <element id="dir-copy" path="$PROJECT_DIR$/tower/sprites" />
-      <element id="module-output" name="tower-game.tower.main" />
+      <element id="module-output" name="tower.main" />
     </root>
   </artifact>
 </component>

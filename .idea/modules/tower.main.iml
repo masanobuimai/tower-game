@@ -4,7 +4,9 @@
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/../../tower/build/classes/java/main" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../tower/audio" />
+    <content url="file://$MODULE_DIR$/../../tower/audio">
+      <sourceFolder url="file://$MODULE_DIR$/../../tower/audio" type="java-resource" />
+    </content>
     <content url="file://$MODULE_DIR$/../../tower/maps">
       <sourceFolder url="file://$MODULE_DIR$/../../tower/maps" type="java-resource" />
     </content>
