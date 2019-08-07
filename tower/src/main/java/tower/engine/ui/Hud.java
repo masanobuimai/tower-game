@@ -25,11 +25,11 @@ public class Hud extends GuiComponent {
   }
 
   private static final Ability[] ABILITIES = new Ability[]{
-      new Ability("prop-painkiller",
+      new Ability("prop-firstaid",
                   () -> GM.abilityRecover().v1, () -> GM.abilityRecover().v2),
-      new Ability("prop-beer",
+      new Ability("prop-earth",
                   () -> GM.abilityShake().v1, () -> GM.abilityShake().v2),
-      new Ability("prop-carrot",
+      new Ability("prop-rush",
                   () -> GM.abilityRush().v1, () -> GM.abilityRush().v2),
       };
 

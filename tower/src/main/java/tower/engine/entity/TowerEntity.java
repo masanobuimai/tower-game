@@ -41,8 +41,8 @@ public class TowerEntity extends Creature {
   private Collection<SoldierEntity> activeSoldiers;
 
   public TowerEntity(Tower tower) {
-    super("bunker");
-    setName("bunker");
+    super("towerA");
+    setName("towerA");
     setTeam(MobEntity.LEFT_SIDE);
     setVelocity(0);
     this.tower = tower;

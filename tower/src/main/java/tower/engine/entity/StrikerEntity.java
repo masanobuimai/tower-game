@@ -26,7 +26,7 @@ public class StrikerEntity extends Creature implements IUpdateable {
   private int damage = 120;
 
   public StrikerEntity(RushAttack rush) {
-    super("gurknukem");
+    super("striker");
     setTeam(MobEntity.LEFT_SIDE);
     shoot = new Shoot(this);
     this.rush = rush;

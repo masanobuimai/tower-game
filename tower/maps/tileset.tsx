@@ -6,10 +6,10 @@ tiledversion = "1.2.4"
 name = "tileset"
 tilewidth = "8"
 tileheight = "8"
-tilecount = "256"
-columns = "16" >
+tilecount = "8"
+columns = "4" >
     < image
 source = "tileset.png"
-width = "128"
-height = "128" / >
+width = "32"
+height = "16" / >
     < / tileset >

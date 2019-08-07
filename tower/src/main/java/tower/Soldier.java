@@ -59,7 +59,7 @@ public class Soldier {
    * <table>
    *   <caption>_</caption>
    *   <tr>
-   *     <th>体力ボーナス</th><th>体力</th><th>歩く速さ</th><th>攻撃力</th>Q
+   *     <th>体力ボーナス</th><th>体力</th><th>歩く速さ</th><th>攻撃力</th>
    *   </tr>
    *   <tr>
    *     <td>@{link {@link LIFE_BONUS#Rate75}}</td><td>75</td><td>90</td><td>30</td>
