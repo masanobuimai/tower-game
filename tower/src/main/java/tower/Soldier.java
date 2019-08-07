@@ -47,6 +47,23 @@ public class Soldier {
   private Supplier<Integer> defaultSpeed = () -> bonus.param(DEFAULT_SPEED);
   private Supplier<Integer> defaultPower = () -> bonus.param(DEFAULT_POWER);
 
+  /** 見た目 */
+  public enum LOOKS {
+    /** タイプA */ TYPE_A("soldierA"),
+    /** タイプB */ TYPE_B("soldierB"),
+    /** タイプC */ TYPE_C("soldierC");
+    private String sprite;
+
+    LOOKS(String name) { this.sprite = name; }
+
+    @Override
+    public String toString() {
+      return sprite;
+    }
+  }
+
+  private LOOKS looks;
+
   private SoldierEntity entity;
 
   /** 体力100，歩く速さ60，攻撃力20の兵士を作る。 */
@@ -76,6 +93,7 @@ public class Soldier {
     this.life = defaultLife.get();
     this.speed = defaultSpeed.get();
     this.power = defaultPower.get();
+    this.looks = LOOKS.TYPE_A;
   }
 
   /**
@@ -98,6 +116,14 @@ public class Soldier {
    */
   public final int getPower() { return power;}
 
+  /**
+   * 見た目を取得します。
+   * @return 見た目
+   */
+  public LOOKS getLooks() {
+    return looks;
+  }
+
   /** パラメタ（歩く速さと攻撃力）をリセットします。 */
   public final void reset() {
     speed = defaultSpeed.get();
@@ -114,6 +140,14 @@ public class Soldier {
   public final void speedUp() {
     speed = defaultSpeed.get() * 2;
     power = defaultPower.get() / 2;
+  }
+
+  /**
+   * 見た目を設定します。
+   * @param looks 見た目
+   */
+  public void setLooks(LOOKS looks) {
+    this.looks = looks;
   }
 
   /**

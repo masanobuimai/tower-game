@@ -11,7 +11,7 @@ public class SoldierEntity extends MobEntity {
   private Soldier soldier;
 
   public SoldierEntity(Soldier soldier) {
-    super("soldierA", LEFT_SIDE, soldier.getSpeed());
+    super(soldier.getLooks().toString(), LEFT_SIDE, soldier.getSpeed());
     this.soldier = soldier;
     getHitPoints().setBaseValue(soldier.getLife());
     damage = soldier.getPower();
